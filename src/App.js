@@ -44,7 +44,7 @@ function styles(theme) {
       paddingRight: theme.spacing.unit * 2,
     },
     paper: {
-      paddingBottom: 50,
+      paddingBottom: 100,
       maxWidth: theme.breakpoints.width('sm'),
       margin: 'auto',
     },
@@ -128,8 +128,6 @@ function BottomAppBar({ classes }) {
 }
 
 const App = withStyles(styles)(function(props) {
-  const [state, setState] = React.useState({})
-
   const { classes } = props
   const avatarClasses = [
     classes.avatar1,
