@@ -70,8 +70,7 @@ function styles(theme) {
   }
 }
 
-const App = withStyles(styles)(function(props) {
-  const { classes } = props
+const NoteList = withStyles(styles)(function({ classes }) {
   const avatarClasses = [
     classes.avatar1,
     classes.avatar2,
@@ -85,56 +84,63 @@ const App = withStyles(styles)(function(props) {
   }
 
   return (
+    <Paper square className={classes.paper}>
+      <Typography className={classes.text} variant="h5" gutterBottom>
+        Notes
+      </Typography>
+      <List className={classes.list}>
+        {getNotes().map(({ id, primary, secondary, person }, idx) => {
+          return (
+            <Fragment key={id}>
+              {idx === 0 && (
+                <ListSubheader className={classes.subHeader}>
+                  Today
+                </ListSubheader>
+              )}
+              {idx === 2 && (
+                <ListSubheader className={classes.subHeader}>
+                  Yesterday
+                </ListSubheader>
+              )}
+              <ListItem button>
+                <Avatar
+                  className={getAvatarClassName(idx)}
+                  alt="Profile Picture"
+                >
+                  {person}
+                </Avatar>
+                <ListItemText
+                  primary={
+                    <Typography variant="subtitle1" noWrap>
+                      {primary}
+                    </Typography>
+                  }
+                  secondary={
+                    <Typography
+                      variant={'body1'}
+                      color="textSecondary"
+                      noWrap
+                    >
+                      {secondary}
+                    </Typography>
+                  }
+                />
+              </ListItem>
+            </Fragment>
+          )
+        })}
+      </List>
+    </Paper>
+  )
+})
+
+NoteList.displayName = 'NoteList'
+
+const App = withStyles({})(function() {
+  return (
     <Fragment>
       <CssBaseline />
-      <Paper square className={classes.paper}>
-        <Typography className={classes.text} variant="h5" gutterBottom>
-          Notes
-        </Typography>
-        <List className={classes.list}>
-          {getNotes().map(({ id, primary, secondary, person }, idx) => {
-            return (
-              <Fragment key={id}>
-                {idx === 0 && (
-                  <ListSubheader className={classes.subHeader}>
-                    Today
-                  </ListSubheader>
-                )}
-                {idx === 2 && (
-                  <ListSubheader className={classes.subHeader}>
-                    Yesterday
-                  </ListSubheader>
-                )}
-                <ListItem button>
-                  <Avatar
-                    className={getAvatarClassName(idx)}
-                    alt="Profile Picture"
-                  >
-                    {person}
-                  </Avatar>
-                  <ListItemText
-                    primary={
-                      <Typography variant="subtitle1" noWrap>
-                        {primary}
-                      </Typography>
-                    }
-                    secondary={
-                      <Typography
-                        variant={'body1'}
-                        color="textSecondary"
-                        noWrap
-                      >
-                        {secondary}
-                      </Typography>
-                    }
-                  />
-                </ListItem>
-              </Fragment>
-            )
-          })}
-        </List>
-      </Paper>
-
+      <NoteList />
       <BottomAppBar />
     </Fragment>
   )
@@ -143,3 +149,9 @@ const App = withStyles(styles)(function(props) {
 App.displayName = 'App'
 
 export default App
+
+if (module.hot) {
+  module.hot.dispose(() => {
+    console.clear()
+  })
+}
