@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react'
+import React, { Fragment } from 'react'
 import MenuIcon from '@material-ui/icons/Menu'
 import AddIcon from '@material-ui/icons/Add'
 import SearchIcon from '@material-ui/icons/Search'
@@ -10,7 +10,7 @@ import MoreIcon from '@material-ui/icons/MoreVert'
 //   Toolbar,
 //   withStyles,
 // } from '@material-ui/core'
-import { withStyles } from '@material-ui/core/styles'
+import { makeStyles, ThemeProvider } from '@material-ui/styles'
 import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
 import IconButton from '@material-ui/core/IconButton'
@@ -38,8 +38,8 @@ import amber from '@material-ui/core/colors/amber'
 import cyan from '@material-ui/core/colors/cyan'
 import green from '@material-ui/core/colors/green'
 
-function styles(theme) {
-  console.log(theme.breakpoints.keys, theme.breakpoints)
+const useStyles = makeStyles(theme => {
+  console.log(`theme`, theme)
   return {
     text: {
       paddingTop: theme.spacing.unit * 2,
@@ -62,6 +62,12 @@ function styles(theme) {
       bottom: 0,
     },
     toolbar: {
+      width: '100%',
+      maxWidth: theme.breakpoints.width('sm'),
+      [theme.breakpoints.up('sm')]: {
+        padding: 0,
+      },
+      margin: 'auto',
       alignItems: 'center',
       justifyContent: 'space-between',
     },
@@ -94,7 +100,7 @@ function styles(theme) {
       backgroundColor: green[500],
     },
   }
-}
+})
 
 function newNote() {
   return {
@@ -124,92 +130,91 @@ function getNotes() {
   return R.times(newDisplayNote, 10)
 }
 
-class App extends Component {
-  render() {
-    const { classes } = this.props
-    const avatarClasses = [
-      classes.avatar1,
-      classes.avatar2,
-      classes.avatar3,
-      classes.avatar4,
-      classes.avatar5,
-    ]
-    return (
-      <>
-        <CssBaseline />
-        <Paper square className={classes.paper}>
-          <Typography className={classes.text} variant="h5" gutterBottom>
-            Notes
-          </Typography>
-          <List className={classes.list}>
-            {getNotes().map(({ id, primary, secondary, person }, idx) => {
-              return (
-                <Fragment key={id}>
-                  {idx === 0 && (
-                    <ListSubheader className={classes.subHeader}>
-                      Today
-                    </ListSubheader>
-                  )}
-                  {idx === 2 && (
-                    <ListSubheader className={classes.subHeader}>
-                      Yesterday
-                    </ListSubheader>
-                  )}
-                  <ListItem button>
-                    <Avatar
-                      className={avatarClasses[idx % avatarClasses.length]}
-                      alt="Profile Picture"
-                    >
-                      {person}
-                    </Avatar>
-                    <ListItemText
-                      primary={
-                        <Typography variant="subheading" noWrap>
-                          {primary}
-                        </Typography>
-                      }
-                      secondary={
-                        <Typography color="textSecondary" noWrap>
-                          {secondary}
-                        </Typography>
-                      }
-                    />
-                  </ListItem>
-                </Fragment>
-              )
-            })}
-          </List>
-        </Paper>
+function App() {
+  const classes = useStyles()
+  const avatarClasses = [
+    classes.avatar1,
+    classes.avatar2,
+    classes.avatar3,
+    classes.avatar4,
+    classes.avatar5,
+  ]
 
-        <AppBar
-          position="fixed"
-          color="primary"
-          className={classes.appBar}
-        >
-          <Toolbar className={classes.toolbar}>
-            <IconButton color="inherit" aria-label="Open drawer">
-              <MenuIcon />
+  return (
+    <ThemeProvider theme={{ spacing: { unit: 4 } }}>
+      <CssBaseline />
+      <Paper square className={classes.paper}>
+        <Typography className={classes.text} variant="h5" gutterBottom>
+          Notes
+        </Typography>
+        <List className={classes.list}>
+          {getNotes().map(({ id, primary, secondary, person }, idx) => {
+            return (
+              <Fragment key={id}>
+                {idx === 0 && (
+                  <ListSubheader className={classes.subHeader}>
+                    Today
+                  </ListSubheader>
+                )}
+                {idx === 2 && (
+                  <ListSubheader className={classes.subHeader}>
+                    Yesterday
+                  </ListSubheader>
+                )}
+                <ListItem button>
+                  <Avatar
+                    className={avatarClasses[idx % avatarClasses.length]}
+                    alt="Profile Picture"
+                  >
+                    {person}
+                  </Avatar>
+                  <ListItemText
+                    primary={
+                      <Typography variant="subtitle1" noWrap>
+                        {primary}
+                      </Typography>
+                    }
+                    secondary={
+                      <Typography
+                        variant={'body1'}
+                        color="textSecondary"
+                        noWrap
+                      >
+                        {secondary}
+                      </Typography>
+                    }
+                  />
+                </ListItem>
+              </Fragment>
+            )
+          })}
+        </List>
+      </Paper>
+
+      <AppBar position="fixed" color="primary" className={classes.appBar}>
+        <Toolbar className={classes.toolbar}>
+          <IconButton color="inherit" aria-label="Open drawer">
+            <MenuIcon />
+          </IconButton>
+          <Fab
+            color="secondary"
+            aria-label="Add"
+            className={classes.fabButton}
+          >
+            <AddIcon />
+          </Fab>
+          <div>
+            <IconButton color="inherit">
+              <SearchIcon />
             </IconButton>
-            <Fab
-              color="secondary"
-              aria-label="Add"
-              className={classes.fabButton}
-            >
-              <AddIcon />
-            </Fab>
-            <div>
-              <IconButton color="inherit">
-                <SearchIcon />
-              </IconButton>
-              <IconButton color="inherit">
-                <MoreIcon />
-              </IconButton>
-            </div>
-          </Toolbar>
-        </AppBar>
-      </>
-    )
-  }
+            <IconButton color="inherit">
+              <MoreIcon />
+            </IconButton>
+          </div>
+        </Toolbar>
+      </AppBar>
+    </ThemeProvider>
+  )
 }
 
-export default withStyles(styles)(App)
+export default App
