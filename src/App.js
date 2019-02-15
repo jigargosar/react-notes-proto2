@@ -24,7 +24,9 @@ function notesReducer(state, action) {
 }
 
 const App = function() {
-  const [notes] = useState(() => getCached('notes') || getNotes())
+  const [notes, dispatch] = useState(
+    () => getCached('notes') || getNotes(),
+  )
 
   useEffect(() => {
     setCache('notes', notes)
@@ -35,7 +37,7 @@ const App = function() {
   return (
     <Fragment>
       <CssBaseline />
-      <NoteList notes={notes} />
+      <NoteList notes={notes} dispatch={dispatch} />
       <BottomAppBar />
     </Fragment>
   )
