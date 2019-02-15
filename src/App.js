@@ -1,17 +1,7 @@
+/* disableInspection ES6UnusedImports */
 import React, { Component } from 'react'
 
-class MenuIcon extends Component {
-  render() {
-    return (
-      <div
-        className="dib lh-solid w2 h2 flex items-center justify-center"
-        tabIndex={0}
-      >
-        |||
-      </div>
-    )
-  }
-}
+import MenuIcon from '@material-ui/icons/Menu'
 
 class App extends Component {
   render() {
