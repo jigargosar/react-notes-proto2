@@ -1,8 +1,4 @@
 import React, { Fragment } from 'react'
-import MenuIcon from '@material-ui/icons/Menu'
-import AddIcon from '@material-ui/icons/Add'
-import SearchIcon from '@material-ui/icons/Search'
-import MoreIcon from '@material-ui/icons/MoreVert'
 // import {
 //   AppBar,
 //   Fab,
@@ -11,10 +7,6 @@ import MoreIcon from '@material-ui/icons/MoreVert'
 //   withStyles,
 // } from '@material-ui/core'
 import { withStyles } from '@material-ui/styles'
-import AppBar from '@material-ui/core/AppBar'
-import Toolbar from '@material-ui/core/Toolbar'
-import IconButton from '@material-ui/core/IconButton'
-import Fab from '@material-ui/core/Fab'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import ListItemText from '@material-ui/core/ListItemText'
 import Avatar from '@material-ui/core/Avatar'
@@ -35,6 +27,7 @@ import amber from '@material-ui/core/colors/amber'
 import cyan from '@material-ui/core/colors/cyan'
 import green from '@material-ui/core/colors/green'
 import { getNotes } from './Store'
+import { BottomAppBar } from './BottomAppBar'
 
 function styles(theme) {
   return {
@@ -98,32 +91,6 @@ function styles(theme) {
     },
   }
 }
-// const useStyles = makeStyles(styles)
-
-const BottomAppBar = withStyles(styles)(({ classes }) => (
-  <AppBar position="fixed" color="primary" className={classes.appBar}>
-    <Toolbar className={classes.toolbar}>
-      <IconButton color="inherit" aria-label="Open drawer">
-        <MenuIcon />
-      </IconButton>
-      <Fab
-        color="secondary"
-        aria-label="Add"
-        className={classes.fabButton}
-      >
-        <AddIcon />
-      </Fab>
-      <div>
-        <IconButton color="inherit">
-          <SearchIcon />
-        </IconButton>
-        <IconButton color="inherit">
-          <MoreIcon />
-        </IconButton>
-      </div>
-    </Toolbar>
-  </AppBar>
-))
 
 const App = withStyles(styles)(function(props) {
   const { classes } = props
@@ -190,7 +157,7 @@ const App = withStyles(styles)(function(props) {
         </List>
       </Paper>
 
-      <BottomAppBar classes={classes} />
+      <BottomAppBar />
     </Fragment>
   )
 })
