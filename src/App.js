@@ -101,6 +101,7 @@ function styles(theme) {
 // const useStyles = makeStyles(styles)
 
 function App(props) {
+  const [state, setState] = React.useState({})
   const { classes: c } = props
   const avatarClasses = [
     c.avatar1,
