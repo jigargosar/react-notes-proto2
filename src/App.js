@@ -101,6 +101,11 @@ function newNote() {
   }
 }
 
+const isEmpty = R.pipe(
+  R.trim,
+  R.isEmpty,
+)
+
 function newDisplayNote() {
   const note = newNote()
   let firstName = faker.name.firstName()
@@ -117,7 +122,7 @@ function newDisplayNote() {
   return {
     id: note._id,
     primary,
-    secondary: rest.join(''),
+    secondary: rest.join('\n'),
     person: R.compose(
       R.toUpper,
       R.take(2),
@@ -162,8 +167,16 @@ class App extends Component {
                       {person}
                     </Avatar>
                     <ListItemText
-                      primary={primary}
-                      secondary={secondary}
+                      primary={
+                        <Typography variant="subheading" noWrap>
+                          {primary}
+                        </Typography>
+                      }
+                      secondary={
+                        <Typography color="textSecondary" noWrap>
+                          {secondary}
+                        </Typography>
+                      }
                     />
                   </ListItem>
                 </Fragment>
