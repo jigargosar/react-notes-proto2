@@ -81,13 +81,15 @@ function newDisplayNote() {
   let firstName = faker.name.firstName()
 
   const lastName = faker.name.lastName()
+
   const person = R.compose(
     R.join(''),
     R.map(R.head),
   )([firstName, lastName])
+
   return {
     id: note._id,
-    primary: firstName + lastName,
+    primary: `${firstName} ${lastName}`,
     secondary: note.content,
     person,
   }
