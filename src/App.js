@@ -65,6 +65,7 @@ function styles(theme) {
   }
 }
 
+//region Messages
 const messages = [
   {
     id: 1,
@@ -116,6 +117,7 @@ const messages = [
     person: '/static/images/avatar/1.jpg',
   },
 ]
+//endregion
 
 class App extends Component {
   render() {
