@@ -29,14 +29,12 @@ import Paper from '@material-ui/core/Paper'
 //   MoreVert as MoreIcon,
 //   Search as SearchIcon,
 // } from '@material-ui/icons'
-import nanoid from 'nanoid'
-import faker from 'faker'
-import * as R from 'ramda'
 import deepOrange from '@material-ui/core/colors/deepOrange'
 import deepPurple from '@material-ui/core/colors/deepPurple'
 import amber from '@material-ui/core/colors/amber'
 import cyan from '@material-ui/core/colors/cyan'
 import green from '@material-ui/core/colors/green'
+import { getNotes } from './Store'
 
 function styles(theme) {
   console.log(`theme`, theme)
@@ -102,34 +100,6 @@ function styles(theme) {
   }
 }
 const useStyles = makeStyles(styles)
-
-function newNote() {
-  return {
-    _id: nanoid(),
-    _rev: null,
-    content: faker.lorem.lines(),
-  }
-}
-
-function newDisplayNote() {
-  const note = newNote()
-
-  const [primary, ...rest] = note.content.trim().split('\n')
-
-  return {
-    id: note._id,
-    primary,
-    secondary: rest.join('\n'),
-    person: R.compose(
-      R.toUpper,
-      R.take(2),
-    )(primary),
-  }
-}
-
-function getNotes() {
-  return R.times(newDisplayNote, 10)
-}
 
 function App() {
   const c = useStyles()
