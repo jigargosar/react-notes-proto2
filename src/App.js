@@ -44,8 +44,6 @@ const App = function() {
   )
 }
 
-App.displayName = 'App'
-
 export default withStyles({})(App)
 
 if (module.hot) {
