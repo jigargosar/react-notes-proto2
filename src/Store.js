@@ -10,9 +10,7 @@ function newNote() {
   }
 }
 
-function newDisplayNote() {
-  const note = newNote()
-
+export function toDisplayNote(note) {
   const [primary, ...rest] = note.content.trim().split('\n')
 
   return {
@@ -26,6 +24,6 @@ function newDisplayNote() {
   }
 }
 
-export function getNotes() {
-  return R.times(newDisplayNote, 10)
+export function getInitialNotes() {
+  return R.times(newNote, 10)
 }

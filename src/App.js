@@ -3,11 +3,11 @@ import { withStyles } from '@material-ui/styles'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import { BottomAppBar } from './BottomAppBar'
 import { NoteList } from './NoteList'
-import { getNotes } from './Store'
+import { getInitialNotes, toDisplayNote } from './Store'
 import { getCached, setCache } from './dom-helpers'
 
 function initNotes(maybeNotes) {
-  return maybeNotes || getNotes()
+  return maybeNotes || getInitialNotes()
 }
 
 function notesReducer(state, action) {
@@ -34,10 +34,12 @@ const App = function() {
     setCache('notes', notes)
   }, [notes])
 
+  const displayNotes = notes.map(toDisplayNote)
+
   return (
     <Fragment>
       <CssBaseline />
-      <NoteList notes={notes} dispatch={dispatch} />
+      <NoteList notes={displayNotes} dispatch={dispatch} />
       <BottomAppBar />
     </Fragment>
   )
