@@ -45,7 +45,7 @@ function styles(theme) {
     },
     paper: {
       paddingBottom: 100,
-      maxWidth: theme.breakpoints.width('sm'),
+      maxWidth: theme.contentMaxWidth,
       margin: 'auto',
     },
     list: {
@@ -60,7 +60,7 @@ function styles(theme) {
     },
     toolbar: {
       width: '100%',
-      maxWidth: theme.breakpoints.width('sm'),
+      maxWidth: theme.toolbarMaxWidth,
       [theme.breakpoints.up('sm')]: {
         padding: 0,
       },

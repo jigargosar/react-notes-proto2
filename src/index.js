@@ -8,15 +8,23 @@ import * as serviceWorker from './serviceWorker'
 import { ThemeProvider } from '@material-ui/styles'
 import { createMuiTheme } from '@material-ui/core/styles'
 
+function getTheme() {
+  const muiTheme = createMuiTheme({
+    typography: {
+      suppressWarning: true,
+    },
+  })
+  const commonMaxWidth = muiTheme.breakpoints.width('sm')
+  return {
+    ...muiTheme,
+    toolbarMaxWidth: commonMaxWidth,
+    contentMaxWidth: commonMaxWidth,
+  }
+}
+
 function render() {
   ReactDOM.render(
-    <ThemeProvider
-      theme={createMuiTheme({
-        typography: {
-          suppressWarning: true,
-        },
-      })}
-    >
+    <ThemeProvider theme={getTheme()}>
       <App />
     </ThemeProvider>,
     document.getElementById('root'),
