@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useReducer, useState } from 'react'
+import React, { Fragment, useEffect, useReducer } from 'react'
 import { withStyles } from '@material-ui/styles'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import { BottomAppBar } from './BottomAppBar'
@@ -24,15 +24,15 @@ function notesReducer(state, action) {
 }
 
 const App = function() {
-  const [notes, dispatch] = useState(
-    () => getCached('notes') || getNotes(),
+  const [notes, dispatch] = useReducer(
+    notesReducer,
+    getCached('notes'),
+    initNotes,
   )
 
   useEffect(() => {
     setCache('notes', notes)
   }, [notes])
-
-  useReducer(notesReducer, getCached('notes'), initNotes)
 
   return (
     <Fragment>
