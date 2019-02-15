@@ -37,7 +37,6 @@ import green from '@material-ui/core/colors/green'
 import { getNotes } from './Store'
 
 function styles(theme) {
-  console.log(`theme`, theme)
   return {
     text: {
       paddingTop: theme.spacing.unit * 2,
