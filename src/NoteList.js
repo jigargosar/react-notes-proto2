@@ -16,15 +16,15 @@ import green from '@material-ui/core/colors/green'
 
 function styles(theme) {
   return {
-    text: {
-      paddingTop: theme.spacing.unit * 2,
-      paddingLeft: theme.spacing.unit * 2,
-      paddingRight: theme.spacing.unit * 2,
-    },
     paper: {
       paddingBottom: 100,
       maxWidth: theme.contentMaxWidth,
       margin: 'auto',
+    },
+    text: {
+      paddingTop: theme.spacing.unit * 2,
+      paddingLeft: theme.spacing.unit * 2,
+      paddingRight: theme.spacing.unit * 2,
     },
     list: {
       marginBottom: theme.spacing.unit * 2,
