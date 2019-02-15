@@ -6,8 +6,8 @@ import { NoteList } from './NoteList'
 import { getNotes } from './Store'
 import { getCached, setCache } from './dom-helpers'
 
-function initNotes(maybeState) {
-  return maybeState || getNotes()
+function initNotes(maybeNotes) {
+  return maybeNotes || getNotes()
 }
 
 function notesReducer(state, action) {
