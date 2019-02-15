@@ -2,7 +2,6 @@ import { withStyles } from '@material-ui/styles'
 import Paper from '@material-ui/core/Paper'
 import Typography from '@material-ui/core/Typography'
 import List from '@material-ui/core/List'
-import { getNotes } from './Store'
 import React, { Fragment } from 'react'
 import ListSubheader from '@material-ui/core/ListSubheader'
 import ListItem from '@material-ui/core/ListItem'
@@ -68,14 +67,17 @@ function getAvatarClassName(classes) {
   }
 }
 
-export const NoteList = withStyles(styles)(function NoteList({ classes }) {
+export const NoteList = withStyles(styles)(function NoteList({
+  notes,
+  classes,
+}) {
   return (
     <Paper square className={classes.paper}>
       <Typography className={classes.text} variant="h5" gutterBottom>
         Notes
       </Typography>
       <List className={classes.list}>
-        {getNotes().map(({ id, primary, secondary, person }, idx) => {
+        {notes.map(({ id, primary, secondary, person }, idx) => {
           return (
             <Fragment key={id}>
               {idx === 0 && (
