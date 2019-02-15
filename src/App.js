@@ -34,6 +34,9 @@ import faker from 'faker'
 import * as R from 'ramda'
 import deepOrange from '@material-ui/core/colors/deepOrange'
 import deepPurple from '@material-ui/core/colors/deepPurple'
+import amber from '@material-ui/core/colors/amber'
+import cyan from '@material-ui/core/colors/cyan'
+import green from '@material-ui/core/colors/green'
 
 function styles(theme) {
   return {
@@ -67,15 +70,25 @@ function styles(theme) {
       right: 0,
       margin: '0 auto',
     },
-    orangeAvatar: {
-      margin: 10,
+    avatar1: {
       color: '#fff',
       backgroundColor: deepOrange[500],
     },
-    purpleAvatar: {
-      margin: 10,
+    avatar2: {
       color: '#fff',
       backgroundColor: deepPurple[500],
+    },
+    avatar3: {
+      color: '#fff',
+      backgroundColor: cyan[500],
+    },
+    avatar4: {
+      color: '#000',
+      backgroundColor: amber[500],
+    },
+    avatar5: {
+      color: '#fff',
+      backgroundColor: green[500],
     },
   }
 }
@@ -138,11 +151,7 @@ class App extends Component {
                   )}
                   <ListItem button>
                     <Avatar
-                      className={
-                        idx % 2 === 0
-                          ? classes.purpleAvatar
-                          : classes.orangeAvatar
-                      }
+                      className={classes[`avatar${(idx % 5) + 1}`]}
                       alt="Profile Picture"
                     >
                       {person}
