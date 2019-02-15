@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react'
+import React, { Fragment } from 'react'
 import MenuIcon from '@material-ui/icons/Menu'
 import AddIcon from '@material-ui/icons/Add'
 import SearchIcon from '@material-ui/icons/Search'
@@ -100,97 +100,91 @@ function styles(theme) {
 }
 // const useStyles = makeStyles(styles)
 
-class App extends Component {
-  render() {
-    const { classes: c } = this.props
-    const avatarClasses = [
-      c.avatar1,
-      c.avatar2,
-      c.avatar3,
-      c.avatar4,
-      c.avatar5,
-    ]
+function App(props) {
+  const { classes: c } = props
+  const avatarClasses = [
+    c.avatar1,
+    c.avatar2,
+    c.avatar3,
+    c.avatar4,
+    c.avatar5,
+  ]
 
-    function getAvatarClassName(idx) {
-      return avatarClasses[idx % avatarClasses.length]
-    }
-
-    return (
-      <Fragment>
-        <CssBaseline />
-        <Paper square className={c.paper}>
-          <Typography className={c.text} variant="h5" gutterBottom>
-            Notes
-          </Typography>
-          <List className={c.list}>
-            {getNotes().map(({ id, primary, secondary, person }, idx) => {
-              return (
-                <Fragment key={id}>
-                  {idx === 0 && (
-                    <ListSubheader className={c.subHeader}>
-                      Today
-                    </ListSubheader>
-                  )}
-                  {idx === 2 && (
-                    <ListSubheader className={c.subHeader}>
-                      Yesterday
-                    </ListSubheader>
-                  )}
-                  <ListItem button>
-                    <Avatar
-                      className={getAvatarClassName(idx)}
-                      alt="Profile Picture"
-                    >
-                      {person}
-                    </Avatar>
-                    <ListItemText
-                      primary={
-                        <Typography variant="subtitle1" noWrap>
-                          {primary}
-                        </Typography>
-                      }
-                      secondary={
-                        <Typography
-                          variant={'body1'}
-                          color="textSecondary"
-                          noWrap
-                        >
-                          {secondary}
-                        </Typography>
-                      }
-                    />
-                  </ListItem>
-                </Fragment>
-              )
-            })}
-          </List>
-        </Paper>
-
-        <AppBar position="fixed" color="primary" className={c.appBar}>
-          <Toolbar className={c.toolbar}>
-            <IconButton color="inherit" aria-label="Open drawer">
-              <MenuIcon />
-            </IconButton>
-            <Fab
-              color="secondary"
-              aria-label="Add"
-              className={c.fabButton}
-            >
-              <AddIcon />
-            </Fab>
-            <div>
-              <IconButton color="inherit">
-                <SearchIcon />
-              </IconButton>
-              <IconButton color="inherit">
-                <MoreIcon />
-              </IconButton>
-            </div>
-          </Toolbar>
-        </AppBar>
-      </Fragment>
-    )
+  function getAvatarClassName(idx) {
+    return avatarClasses[idx % avatarClasses.length]
   }
+
+  return (
+    <Fragment>
+      <CssBaseline />
+      <Paper square className={c.paper}>
+        <Typography className={c.text} variant="h5" gutterBottom>
+          Notes
+        </Typography>
+        <List className={c.list}>
+          {getNotes().map(({ id, primary, secondary, person }, idx) => {
+            return (
+              <Fragment key={id}>
+                {idx === 0 && (
+                  <ListSubheader className={c.subHeader}>
+                    Today
+                  </ListSubheader>
+                )}
+                {idx === 2 && (
+                  <ListSubheader className={c.subHeader}>
+                    Yesterday
+                  </ListSubheader>
+                )}
+                <ListItem button>
+                  <Avatar
+                    className={getAvatarClassName(idx)}
+                    alt="Profile Picture"
+                  >
+                    {person}
+                  </Avatar>
+                  <ListItemText
+                    primary={
+                      <Typography variant="subtitle1" noWrap>
+                        {primary}
+                      </Typography>
+                    }
+                    secondary={
+                      <Typography
+                        variant={'body1'}
+                        color="textSecondary"
+                        noWrap
+                      >
+                        {secondary}
+                      </Typography>
+                    }
+                  />
+                </ListItem>
+              </Fragment>
+            )
+          })}
+        </List>
+      </Paper>
+
+      <AppBar position="fixed" color="primary" className={c.appBar}>
+        <Toolbar className={c.toolbar}>
+          <IconButton color="inherit" aria-label="Open drawer">
+            <MenuIcon />
+          </IconButton>
+          <Fab color="secondary" aria-label="Add" className={c.fabButton}>
+            <AddIcon />
+          </Fab>
+          <div>
+            <IconButton color="inherit">
+              <SearchIcon />
+            </IconButton>
+            <IconButton color="inherit">
+              <MoreIcon />
+            </IconButton>
+          </div>
+        </Toolbar>
+      </AppBar>
+    </Fragment>
+  )
 }
 
 export default withStyles(styles)(App)
