@@ -27,3 +27,20 @@ export function toDisplayNote(note) {
 export function getInitialNotes() {
   return R.times(newNote, 10)
 }
+
+export function initNotes(maybeNotes) {
+  return maybeNotes || getInitialNotes()
+}
+
+export function notesReducer(state, action) {
+  switch (action.type) {
+    case 'addNew':
+      return state
+    case 'delete':
+      return state
+    case 'reset':
+      return initNotes(action.payload)
+    default:
+      throw new Error('Invalid Action')
+  }
+}
