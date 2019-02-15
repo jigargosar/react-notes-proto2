@@ -100,32 +100,30 @@ function styles(theme) {
 }
 // const useStyles = makeStyles(styles)
 
-function BottomAppBar({ classes }) {
-  return (
-    <AppBar position="fixed" color="primary" className={classes.appBar}>
-      <Toolbar className={classes.toolbar}>
-        <IconButton color="inherit" aria-label="Open drawer">
-          <MenuIcon />
+const BottomAppBar = withStyles(styles)(({ classes }) => (
+  <AppBar position="fixed" color="primary" className={classes.appBar}>
+    <Toolbar className={classes.toolbar}>
+      <IconButton color="inherit" aria-label="Open drawer">
+        <MenuIcon />
+      </IconButton>
+      <Fab
+        color="secondary"
+        aria-label="Add"
+        className={classes.fabButton}
+      >
+        <AddIcon />
+      </Fab>
+      <div>
+        <IconButton color="inherit">
+          <SearchIcon />
         </IconButton>
-        <Fab
-          color="secondary"
-          aria-label="Add"
-          className={classes.fabButton}
-        >
-          <AddIcon />
-        </Fab>
-        <div>
-          <IconButton color="inherit">
-            <SearchIcon />
-          </IconButton>
-          <IconButton color="inherit">
-            <MoreIcon />
-          </IconButton>
-        </div>
-      </Toolbar>
-    </AppBar>
-  )
-}
+        <IconButton color="inherit">
+          <MoreIcon />
+        </IconButton>
+      </div>
+    </Toolbar>
+  </AppBar>
+))
 
 const App = withStyles(styles)(function(props) {
   const { classes } = props
