@@ -1,10 +1,11 @@
-import React, { Fragment, useEffect, useReducer } from 'react'
+import React, { Fragment, useReducer } from 'react'
 import { withStyles } from '@material-ui/styles'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import { BottomAppBar } from './BottomAppBar'
 import { NoteList } from './NoteList'
 import { getInitialNotes, toDisplayNote } from './Store'
-import { getCached, setCache } from './dom-helpers'
+import { getCached } from './dom-helpers'
+import { useCacheEffect } from './hooks'
 
 function initNotes(maybeNotes) {
   return maybeNotes || getInitialNotes()
@@ -21,12 +22,6 @@ function notesReducer(state, action) {
     default:
       throw new Error('Invalid Action')
   }
-}
-
-function useCacheEffect(key, notes) {
-  useEffect(() => {
-    setCache(key, notes)
-  }, [notes])
 }
 
 const App = function() {
