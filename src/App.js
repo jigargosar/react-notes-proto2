@@ -47,28 +47,6 @@ function styles(theme) {
     subHeader: {
       backgroundColor: theme.palette.background.paper,
     },
-    appBar: {
-      top: 'auto',
-      bottom: 0,
-    },
-    toolbar: {
-      width: '100%',
-      maxWidth: theme.toolbarMaxWidth,
-      [theme.breakpoints.up('sm')]: {
-        padding: 0,
-      },
-      margin: 'auto',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-    },
-    fabButton: {
-      position: 'absolute',
-      zIndex: 1,
-      top: -30,
-      left: 0,
-      right: 0,
-      margin: '0 auto',
-    },
     avatar1: {
       color: '#fff',
       backgroundColor: deepOrange[500],
