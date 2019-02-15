@@ -111,6 +111,10 @@ class App extends Component {
       c.avatar5,
     ]
 
+    function getAvatarClassName(idx) {
+      return avatarClasses[idx % avatarClasses.length]
+    }
+
     return (
       <Fragment>
         <CssBaseline />
@@ -134,7 +138,7 @@ class App extends Component {
                   )}
                   <ListItem button>
                     <Avatar
-                      className={avatarClasses[idx % avatarClasses.length]}
+                      className={getAvatarClassName(idx)}
                       alt="Profile Picture"
                     >
                       {person}
