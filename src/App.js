@@ -29,6 +29,9 @@ import Paper from '@material-ui/core/Paper'
 //   MoreVert as MoreIcon,
 //   Search as SearchIcon,
 // } from '@material-ui/icons'
+import nanoid from 'nanoid'
+import faker from 'faker'
+import * as R from 'ramda'
 
 function styles(theme) {
   return {
@@ -119,6 +122,30 @@ const messages = [
 ]
 //endregion
 
+function newNote() {
+  return {
+    _id: nanoid(),
+    _rev: null,
+    content: faker.lorem.lines(),
+  }
+}
+
+function newDisplayNote() {
+  const note = newNote()
+  return {
+    id: note._id,
+    primary: 'Summer BBQ',
+    secondary: note.content,
+    person: `https://material-ui.com/static/images/avatar/${faker.random.number(
+      { min: 0, max: 7 },
+    )}.jpg`,
+  }
+}
+
+function getNotes() {
+  return R.times(newDisplayNote, 10)
+}
+
 class App extends Component {
   render() {
     const { classes } = this.props
@@ -130,7 +157,7 @@ class App extends Component {
             Inbox
           </Typography>
           <List className={classes.list}>
-            {messages.map(({ id, primary, secondary, person }) => (
+            {getNotes().map(({ id, primary, secondary, person }) => (
               <Fragment key={id}>
                 {id === 1 && (
                   <ListSubheader className={classes.subHeader}>
@@ -143,10 +170,7 @@ class App extends Component {
                   </ListSubheader>
                 )}
                 <ListItem button>
-                  <Avatar
-                    alt="Profile Picture"
-                    src={`https://material-ui.com/${person}`}
-                  />
+                  <Avatar alt="Profile Picture" src={person} />
                   <ListItemText primary={primary} secondary={secondary} />
                 </ListItem>
               </Fragment>
