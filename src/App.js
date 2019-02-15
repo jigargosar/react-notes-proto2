@@ -124,6 +124,13 @@ function getNotes() {
 class App extends Component {
   render() {
     const { classes } = this.props
+    const avatarClasses = [
+      classes.avatar1,
+      classes.avatar2,
+      classes.avatar3,
+      classes.avatar4,
+      classes.avatar5,
+    ]
     return (
       <>
         <CssBaseline />
@@ -148,7 +155,7 @@ class App extends Component {
                   )}
                   <ListItem button>
                     <Avatar
-                      className={classes[`avatar${(idx % 5) + 1}`]}
+                      className={avatarClasses[idx % avatarClasses.length]}
                       alt="Profile Picture"
                     >
                       {person}
