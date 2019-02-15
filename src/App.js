@@ -23,6 +23,12 @@ function notesReducer(state, action) {
   }
 }
 
+function useCacheEffect(key, notes) {
+  useEffect(() => {
+    setCache(key, notes)
+  }, [notes])
+}
+
 const App = function() {
   const [notes, dispatch] = useReducer(
     notesReducer,
@@ -30,9 +36,7 @@ const App = function() {
     initNotes,
   )
 
-  useEffect(() => {
-    setCache('notes', notes)
-  }, [notes])
+  useCacheEffect('notes', notes)
 
   const displayNotes = notes.map(toDisplayNote)
 
