@@ -140,15 +140,14 @@ class App extends Component {
           </Typography>
           <List className={classes.list}>
             {getNotes().map(({ id, primary, secondary, person }, idx) => {
-              idx += 1
               return (
                 <Fragment key={id}>
-                  {idx === 1 && (
+                  {idx === 0 && (
                     <ListSubheader className={classes.subHeader}>
                       Today
                     </ListSubheader>
                   )}
-                  {idx === 3 && (
+                  {idx === 2 && (
                     <ListSubheader className={classes.subHeader}>
                       Yesterday
                     </ListSubheader>
