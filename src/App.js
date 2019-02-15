@@ -101,21 +101,8 @@ function newNote() {
   }
 }
 
-const isEmpty = R.pipe(
-  R.trim,
-  R.isEmpty,
-)
-
 function newDisplayNote() {
   const note = newNote()
-  let firstName = faker.name.firstName()
-
-  const lastName = faker.name.lastName()
-
-  const person = R.compose(
-    R.join(''),
-    R.map(R.head),
-  )([firstName, lastName])
 
   const [primary, ...rest] = note.content.trim().split('\n')
 
