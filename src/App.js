@@ -140,7 +140,7 @@ function newDisplayNote() {
   const note = newNote()
   return {
     id: note._id,
-    primary: 'Summer BBQ',
+    primary: faker.name.findName(),
     secondary: note.content,
     person: fakeAvatarImage(),
   }
