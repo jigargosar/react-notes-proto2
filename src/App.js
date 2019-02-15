@@ -39,6 +39,7 @@ import cyan from '@material-ui/core/colors/cyan'
 import green from '@material-ui/core/colors/green'
 
 function styles(theme) {
+  console.log(theme.breakpoints.keys, theme.breakpoints)
   return {
     text: {
       paddingTop: theme.spacing.unit * 2,
@@ -47,6 +48,8 @@ function styles(theme) {
     },
     paper: {
       paddingBottom: 50,
+      maxWidth: theme.breakpoints.width('sm'),
+      margin: 'auto',
     },
     list: {
       marginBottom: theme.spacing.unit * 2,
