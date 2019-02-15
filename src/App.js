@@ -112,11 +112,16 @@ function newDisplayNote() {
     R.map(R.head),
   )([firstName, lastName])
 
+  const [primary, ...rest] = note.content.trim().split('\n')
+
   return {
     id: note._id,
-    primary: `${firstName} ${lastName}`,
-    secondary: note.content,
-    person,
+    primary,
+    secondary: rest.join(''),
+    person: R.compose(
+      R.toUpper,
+      R.take(2),
+    )(primary),
   }
 }
 
