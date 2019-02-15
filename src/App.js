@@ -130,15 +130,19 @@ function newNote() {
   }
 }
 
+function fakeAvatarImage() {
+  return `https://material-ui.com/static/images/avatar/${faker.random.number(
+    { min: 0, max: 7 },
+  )}.jpg`
+}
+
 function newDisplayNote() {
   const note = newNote()
   return {
     id: note._id,
     primary: 'Summer BBQ',
     secondary: note.content,
-    person: `https://material-ui.com/static/images/avatar/${faker.random.number(
-      { min: 0, max: 7 },
-    )}.jpg`,
+    person: fakeAvatarImage(),
   }
 }
 
