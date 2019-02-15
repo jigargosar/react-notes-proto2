@@ -32,6 +32,8 @@ import Paper from '@material-ui/core/Paper'
 import nanoid from 'nanoid'
 import faker from 'faker'
 import * as R from 'ramda'
+import deepOrange from '@material-ui/core/colors/deepOrange'
+import deepPurple from '@material-ui/core/colors/deepPurple'
 
 function styles(theme) {
   return {
@@ -64,6 +66,16 @@ function styles(theme) {
       left: 0,
       right: 0,
       margin: '0 auto',
+    },
+    orangeAvatar: {
+      margin: 10,
+      color: '#fff',
+      backgroundColor: deepOrange[500],
+    },
+    purpleAvatar: {
+      margin: 10,
+      color: '#fff',
+      backgroundColor: deepPurple[500],
     },
   }
 }
@@ -125,7 +137,16 @@ class App extends Component {
                     </ListSubheader>
                   )}
                   <ListItem button>
-                    <Avatar alt="Profile Picture">{person}</Avatar>
+                    <Avatar
+                      className={
+                        idx % 2 === 0
+                          ? classes.purpleAvatar
+                          : classes.orangeAvatar
+                      }
+                      alt="Profile Picture"
+                    >
+                      {person}
+                    </Avatar>
                     <ListItemText
                       primary={primary}
                       secondary={secondary}
