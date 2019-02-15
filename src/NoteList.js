@@ -55,19 +55,20 @@ function styles(theme) {
   }
 }
 
-export const NoteList = withStyles(styles)(function NoteList({ classes }) {
-  const avatarClasses = [
-    classes.avatar1,
-    classes.avatar2,
-    classes.avatar3,
-    classes.avatar4,
-    classes.avatar5,
-  ]
-
-  function getAvatarClassName(idx) {
+function getAvatarClassName(classes) {
+  return idx => {
+    const avatarClasses = [
+      classes.avatar1,
+      classes.avatar2,
+      classes.avatar3,
+      classes.avatar4,
+      classes.avatar5,
+    ]
     return avatarClasses[idx % avatarClasses.length]
   }
+}
 
+export const NoteList = withStyles(styles)(function NoteList({ classes }) {
   return (
     <Paper square className={classes.paper}>
       <Typography className={classes.text} variant="h5" gutterBottom>
@@ -89,7 +90,7 @@ export const NoteList = withStyles(styles)(function NoteList({ classes }) {
               )}
               <ListItem button>
                 <Avatar
-                  className={getAvatarClassName(idx)}
+                  className={getAvatarClassName(classes)(idx)}
                   alt="Profile Picture"
                 >
                   {person}
