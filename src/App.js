@@ -38,7 +38,7 @@ import amber from '@material-ui/core/colors/amber'
 import cyan from '@material-ui/core/colors/cyan'
 import green from '@material-ui/core/colors/green'
 
-const useStyles = makeStyles(theme => {
+function styles(theme) {
   console.log(`theme`, theme)
   return {
     text: {
@@ -100,7 +100,8 @@ const useStyles = makeStyles(theme => {
       backgroundColor: green[500],
     },
   }
-})
+}
+const useStyles = makeStyles(styles)
 
 function newNote() {
   return {
@@ -131,33 +132,33 @@ function getNotes() {
 }
 
 function App() {
-  const classes = useStyles()
+  const c = useStyles()
   const avatarClasses = [
-    classes.avatar1,
-    classes.avatar2,
-    classes.avatar3,
-    classes.avatar4,
-    classes.avatar5,
+    c.avatar1,
+    c.avatar2,
+    c.avatar3,
+    c.avatar4,
+    c.avatar5,
   ]
 
   return (
     <ThemeProvider theme={{ spacing: { unit: 4 } }}>
       <CssBaseline />
-      <Paper square className={classes.paper}>
-        <Typography className={classes.text} variant="h5" gutterBottom>
+      <Paper square className={c.paper}>
+        <Typography className={c.text} variant="h5" gutterBottom>
           Notes
         </Typography>
-        <List className={classes.list}>
+        <List className={c.list}>
           {getNotes().map(({ id, primary, secondary, person }, idx) => {
             return (
               <Fragment key={id}>
                 {idx === 0 && (
-                  <ListSubheader className={classes.subHeader}>
+                  <ListSubheader className={c.subHeader}>
                     Today
                   </ListSubheader>
                 )}
                 {idx === 2 && (
-                  <ListSubheader className={classes.subHeader}>
+                  <ListSubheader className={c.subHeader}>
                     Yesterday
                   </ListSubheader>
                 )}
@@ -191,16 +192,12 @@ function App() {
         </List>
       </Paper>
 
-      <AppBar position="fixed" color="primary" className={classes.appBar}>
-        <Toolbar className={classes.toolbar}>
+      <AppBar position="fixed" color="primary" className={c.appBar}>
+        <Toolbar className={c.toolbar}>
           <IconButton color="inherit" aria-label="Open drawer">
             <MenuIcon />
           </IconButton>
-          <Fab
-            color="secondary"
-            aria-label="Add"
-            className={classes.fabButton}
-          >
+          <Fab color="secondary" aria-label="Add" className={c.fabButton}>
             <AddIcon />
           </Fab>
           <div>
