@@ -10,7 +10,7 @@ import MoreIcon from '@material-ui/icons/MoreVert'
 //   Toolbar,
 //   withStyles,
 // } from '@material-ui/core'
-import { makeStyles, ThemeProvider } from '@material-ui/styles'
+import { makeStyles } from '@material-ui/styles'
 import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
 import IconButton from '@material-ui/core/IconButton'
@@ -142,7 +142,7 @@ function App() {
   ]
 
   return (
-    <ThemeProvider theme={{ spacing: { unit: 4 } }}>
+    <Fragment>
       <CssBaseline />
       <Paper square className={c.paper}>
         <Typography className={c.text} variant="h5" gutterBottom>
@@ -210,7 +210,7 @@ function App() {
           </div>
         </Toolbar>
       </AppBar>
-    </ThemeProvider>
+    </Fragment>
   )
 }
 
