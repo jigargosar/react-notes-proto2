@@ -132,7 +132,7 @@ function newNote() {
 
 function fakeAvatarImage() {
   return `https://material-ui.com/static/images/avatar/${faker.random.number(
-    { min: 0, max: 7 },
+    { min: 1, max: 7 },
   )}.jpg`
 }
 
@@ -158,27 +158,33 @@ class App extends Component {
         <CssBaseline />
         <Paper square className={classes.paper}>
           <Typography className={classes.text} variant="h5" gutterBottom>
-            Inbox
+            Notes
           </Typography>
           <List className={classes.list}>
-            {getNotes().map(({ id, primary, secondary, person }) => (
-              <Fragment key={id}>
-                {id === 1 && (
-                  <ListSubheader className={classes.subHeader}>
-                    Today
-                  </ListSubheader>
-                )}
-                {id === 3 && (
-                  <ListSubheader className={classes.subHeader}>
-                    Yesterday
-                  </ListSubheader>
-                )}
-                <ListItem button>
-                  <Avatar alt="Profile Picture" src={person} />
-                  <ListItemText primary={primary} secondary={secondary} />
-                </ListItem>
-              </Fragment>
-            ))}
+            {getNotes().map(({ id, primary, secondary, person }, idx) => {
+              idx += 1
+              return (
+                <Fragment key={id}>
+                  {idx === 1 && (
+                    <ListSubheader className={classes.subHeader}>
+                      Today
+                    </ListSubheader>
+                  )}
+                  {idx === 3 && (
+                    <ListSubheader className={classes.subHeader}>
+                      Yesterday
+                    </ListSubheader>
+                  )}
+                  <ListItem button>
+                    <Avatar alt="Profile Picture" src={person} />
+                    <ListItemText
+                      primary={primary}
+                      secondary={secondary}
+                    />
+                  </ListItem>
+                </Fragment>
+              )
+            })}
           </List>
         </Paper>
 
