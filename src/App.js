@@ -100,15 +100,43 @@ function styles(theme) {
 }
 // const useStyles = makeStyles(styles)
 
-function App(props) {
+function BottomAppBar({ classes }) {
+  return (
+    <AppBar position="fixed" color="primary" className={classes.appBar}>
+      <Toolbar className={classes.toolbar}>
+        <IconButton color="inherit" aria-label="Open drawer">
+          <MenuIcon />
+        </IconButton>
+        <Fab
+          color="secondary"
+          aria-label="Add"
+          className={classes.fabButton}
+        >
+          <AddIcon />
+        </Fab>
+        <div>
+          <IconButton color="inherit">
+            <SearchIcon />
+          </IconButton>
+          <IconButton color="inherit">
+            <MoreIcon />
+          </IconButton>
+        </div>
+      </Toolbar>
+    </AppBar>
+  )
+}
+
+const App = withStyles(styles)(function(props) {
   const [state, setState] = React.useState({})
-  const { classes: c } = props
+
+  const { classes } = props
   const avatarClasses = [
-    c.avatar1,
-    c.avatar2,
-    c.avatar3,
-    c.avatar4,
-    c.avatar5,
+    classes.avatar1,
+    classes.avatar2,
+    classes.avatar3,
+    classes.avatar4,
+    classes.avatar5,
   ]
 
   function getAvatarClassName(idx) {
@@ -118,21 +146,21 @@ function App(props) {
   return (
     <Fragment>
       <CssBaseline />
-      <Paper square className={c.paper}>
-        <Typography className={c.text} variant="h5" gutterBottom>
+      <Paper square className={classes.paper}>
+        <Typography className={classes.text} variant="h5" gutterBottom>
           Notes
         </Typography>
-        <List className={c.list}>
+        <List className={classes.list}>
           {getNotes().map(({ id, primary, secondary, person }, idx) => {
             return (
               <Fragment key={id}>
                 {idx === 0 && (
-                  <ListSubheader className={c.subHeader}>
+                  <ListSubheader className={classes.subHeader}>
                     Today
                   </ListSubheader>
                 )}
                 {idx === 2 && (
-                  <ListSubheader className={c.subHeader}>
+                  <ListSubheader className={classes.subHeader}>
                     Yesterday
                   </ListSubheader>
                 )}
@@ -166,26 +194,11 @@ function App(props) {
         </List>
       </Paper>
 
-      <AppBar position="fixed" color="primary" className={c.appBar}>
-        <Toolbar className={c.toolbar}>
-          <IconButton color="inherit" aria-label="Open drawer">
-            <MenuIcon />
-          </IconButton>
-          <Fab color="secondary" aria-label="Add" className={c.fabButton}>
-            <AddIcon />
-          </Fab>
-          <div>
-            <IconButton color="inherit">
-              <SearchIcon />
-            </IconButton>
-            <IconButton color="inherit">
-              <MoreIcon />
-            </IconButton>
-          </div>
-        </Toolbar>
-      </AppBar>
+      <BottomAppBar classes={classes} />
     </Fragment>
   )
-}
+})
 
-export default withStyles(styles)(App)
+App.displayName = 'App'
+
+export default App
