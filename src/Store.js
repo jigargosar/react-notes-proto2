@@ -120,15 +120,6 @@ function useNotes() {
     }
   }, [])
 
-  // useEffect(() => {
-  //   const db = dbRef.current
-  //   const changes = db
-  //     .changes({ live: true, include_docs: true, since: 'now' })
-  //     .on('change', actions.handlePouchChange)
-  //     .on('error', console.error)
-  //   return () => changes.cancel()
-  // }, [])
-
   const actions = useMemo(() => {
     const dbPut = doc => dbRef.current.put(doc)
     const dbGet = id => dbRef.current.get(id)
