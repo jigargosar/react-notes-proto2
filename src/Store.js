@@ -56,7 +56,7 @@ function consoleReducer(state, action) {
   switch (action.type) {
     case 'con.addLogs':
       const appendNewLogsAndLimit = compose([
-        R.takeLast(3),
+        // R.takeLast(3),
         R.concat(R.__, payload),
       ])
       return overProp('logs')(appendNewLogsAndLimit)(state)
