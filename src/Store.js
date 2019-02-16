@@ -59,15 +59,19 @@ function consoleReducer(state, action) {
         R.concat(R.__, payload),
       ])
       return overProp('logs')(appendNewLogsAndLimit)(state)
-    case 'note.delete':
-      return state
+    case 'con.toggle':
+      return overProp('hidden', R.not, state)
     default:
       throw new Error('[consoleReducer] Invalid Action')
   }
 }
 
+function getCachedConsoleView() {
+  return getCached('console-view') || { hidden: false }
+}
+
 function getInitialConsoleState() {
-  return { logs: getCached('logs') || [], hidden: false }
+  return { logs: getCached('logs') || [], ...getCachedConsoleView() }
 }
 
 export function useStore() {
