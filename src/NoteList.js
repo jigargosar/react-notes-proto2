@@ -3,7 +3,6 @@ import Paper from '@material-ui/core/Paper'
 import Typography from '@material-ui/core/Typography'
 import List from '@material-ui/core/List'
 import React, { Fragment, useEffect } from 'react'
-import ListSubheader from '@material-ui/core/ListSubheader'
 import ListItem from '@material-ui/core/ListItem'
 import Avatar from '@material-ui/core/Avatar'
 import ListItemText from '@material-ui/core/ListItemText'
@@ -103,16 +102,6 @@ export const NoteList = withStyles(styles)(function NoteList({
           ({ id, primary, secondary, person }, idx) => {
             return (
               <Fragment key={id}>
-                {idx === 0 && (
-                  <ListSubheader className={classes.subHeader}>
-                    Today
-                  </ListSubheader>
-                )}
-                {idx === 2 && (
-                  <ListSubheader className={classes.subHeader}>
-                    Yesterday
-                  </ListSubheader>
-                )}
                 <ListItem id={noteIdToItemDomId(id)} button>
                   <Avatar
                     className={getAvatarClassName(classes)(idx)}
