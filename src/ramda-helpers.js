@@ -1,6 +1,9 @@
 import validate from 'aproba'
 import * as R from 'ramda'
 
+export const C = R.always
+export const I = R.identity
+
 export function overProp(propName) {
   validate('S', arguments)
   return R.over(R.lensProp(propName))

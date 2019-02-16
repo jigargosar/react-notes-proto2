@@ -6,7 +6,7 @@ import { getCached } from './dom-helpers'
 import { useCacheEffect } from './hooks'
 import { Hook } from 'console-feed'
 import useMousetrap from 'react-hook-mousetrap'
-import { compose, overProp, pipe } from './ramda-helpers'
+import { C, compose, overProp, pipe } from './ramda-helpers'
 import PouchDB from 'pouchdb-browser'
 
 function newNote() {
@@ -45,12 +45,17 @@ export function notesReducer(state, action) {
       )
     case 'notes.delete':
       return pipe([overById(R.omit([payload]))])(state)
-    case 'notes.reset':
-      return initNotes(payload)
+    case 'notes.replaceAll':
+      return overById(C(payload))(state)
     default:
       console.error('Invalid Action', action)
       throw new Error('Invalid Action')
   }
+}
+
+async function fetchAllDocs(db) {
+  const res = await db.allDocs()
+  return res.rows.map(R.prop('doc'))
 }
 
 function useNotes() {
@@ -71,10 +76,20 @@ function useNotes() {
     }
   }, [])
 
+  useEffect(() => {
+    const db = dbRef.current
+    if (!db) return
+    fetchAllDocs(db)
+      .then(actions.replaceAll)
+      .catch(console.error)
+  }, [dbRef.current])
+
   const actions = useMemo(() => {
     return {
       addNew: () => dispatch({ type: 'notes.addNew' }),
       delete: id => dispatch({ type: 'notes.delete', payload: id }),
+      replaceAll: docs =>
+        dispatch({ type: 'notes.replaceAll', payload: docs }),
     }
   }, [])
   return [notes, actions]
