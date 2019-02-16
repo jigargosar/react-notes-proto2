@@ -41,7 +41,7 @@ export function initNotes(maybeNotes) {
 export function notesReducer(state, action) {
   switch (action.type) {
     case 'note.addNew':
-      return state
+      return R.prepend(newNote())(state)
     case 'note.delete':
       return state
     case 'note.reset':
