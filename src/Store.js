@@ -60,8 +60,7 @@ export function notesReducer(state, action) {
         state,
       )
     case 'notes.initFromAllDocsResult': {
-      // noinspection UnnecessaryLocalVariableJS
-      const notes = payload
+      const notes = payload.rows.map(R.prop('doc'))
       const newById = notesListToById(notes)
       return pipe([overById(C(newById)), R.dissoc('lastAddedId')])(state)
     }
@@ -69,11 +68,6 @@ export function notesReducer(state, action) {
       console.error('Invalid Action', action)
       throw new Error('Invalid Action')
   }
-}
-
-async function fetchAllDocs(db) {
-  const res = await db.allDocs({ include_docs: true })
-  return res.rows.map(R.prop('doc'))
 }
 
 function useNotesActions(dbRef, dispatch) {
@@ -101,8 +95,11 @@ function useNotesActions(dbRef, dispatch) {
         await patchNote({ content: newNoteContent() }, note)
       },
 
-      initFromAllDocsResult: docs =>
-        dispatch({ type: 'notes.initFromAllDocsResult', payload: docs }),
+      initFromAllDocsResult: allDocsRes =>
+        dispatch({
+          type: 'notes.initFromAllDocsResult',
+          payload: allDocsRes,
+        }),
 
       handlePouchChange: change => {
         if (change.deleted) {
@@ -134,7 +131,7 @@ function useNotes() {
 
   useEffect(() => {
     const db = new PouchDB('notes')
-    fetchAllDocs(db)
+    db.allDocs({ include_docs: true })
       .then(actions.initFromAllDocsResult)
       .catch(console.error)
 
