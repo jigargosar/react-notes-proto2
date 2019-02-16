@@ -50,7 +50,7 @@ export function notesReducer(state, action) {
   switch (action.type) {
     case 'notes.addNew':
       const note = newNote()
-      return overProp('byId')(R.mergeLeft(R.of(note._id)(note)))(state)
+      return overProp('byId')(R.mergeLeft(R.objOf(note._id)(note)))(state)
     case 'notes.delete':
       return state
     case 'notes.reset':
@@ -144,8 +144,6 @@ export function useStore() {
     R.values,
     R.prop('byId'),
   ])
-
-  debugger
 
   return [con, getDisplayNotes(notes), actions]
 }
