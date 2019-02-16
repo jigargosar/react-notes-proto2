@@ -66,7 +66,7 @@ export function notesReducer(state, action) {
         state,
       )
     case 'notes.delete':
-      return pipe(overById(R.omit([payload])))(state)
+      return pipe([overById(R.omit([payload]))])(state)
     case 'notes.reset':
       return initNotes(payload)
     default:
