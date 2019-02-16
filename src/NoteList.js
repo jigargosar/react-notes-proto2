@@ -88,7 +88,7 @@ export const NoteList = withStyles(styles)(function NoteList({
       if (el) {
         el.focus()
       } else {
-        throw new Error('unable to focus last added note')
+        console.error('unable to focus last added note')
       }
     }
   }, lastAddedId)
