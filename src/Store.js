@@ -122,30 +122,22 @@ function useNotes() {
     return () => changes.cancel()
   }, [])
 
-  function dbGet(id) {
-    return dbRef.current.get(id)
-  }
-
-  function dbPut(persistedNote) {
-    return dbRef.current.put({
-      ...persistedNote,
-      content: newNoteContent(),
-    })
-  }
-
   const actions = useMemo(() => {
+    const dbPut = doc => dbRef.current.put(doc)
+    const dbGet = id => dbRef.current.get(id)
+
     return {
       addNew: async () => {
         const note = newNote()
-        await dbRef.current.put(note)
+        await dbPut(note)
       },
       delete: async id => {
         const persistedNote = await dbGet(id)
-        await dbRef.current.put({ ...persistedNote, _deleted: true })
+        await dbPut({ ...persistedNote, _deleted: true })
       },
       edit: async id => {
         const persistedNote = await dbGet(id)
-        await dbPut(persistedNote)
+        await dbPut({ ...persistedNote, content: newNoteContent() })
       },
 
       initFromAllDocsResult: docs =>
