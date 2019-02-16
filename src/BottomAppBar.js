@@ -8,9 +8,6 @@ import MenuIcon from '@material-ui/icons/Menu'
 import AddIcon from '@material-ui/icons/Add'
 import SearchIcon from '@material-ui/icons/Search'
 import MoreIcon from '@material-ui/icons/MoreVert'
-import QueueIcon from '@material-ui/icons/Queue'
-import Switch from '@material-ui/core/Switch'
-import Badge from '@material-ui/core/Badge'
 
 function styles(theme) {
   return {
@@ -42,7 +39,6 @@ function styles(theme) {
 export const BottomAppBar = withStyles(styles)(function BottomAppBar({
   classes,
   con,
-  actions,
 }) {
   const log = console.feed ? console.feed.pointers.log : console.log
   log('logging', con.logs)
@@ -61,16 +57,6 @@ export const BottomAppBar = withStyles(styles)(function BottomAppBar({
           <AddIcon />
         </Fab>
         <div>
-          <Switch
-            checked={!con.hidden}
-            onChange={() => actions.con.toggle()}
-          />
-          <Badge className={classes.margin} badgeContent={con.logs.length}>
-            L
-          </Badge>
-          <IconButton color="inherit">
-            <QueueIcon />
-          </IconButton>
           <IconButton color="inherit">
             <SearchIcon />
           </IconButton>
