@@ -48,7 +48,7 @@ const App = function() {
         ),
       )
     })
-    return () => (disposed = true)
+    return () => void (disposed = true)
   }, [])
 
   useEffect(() => {
