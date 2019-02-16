@@ -85,7 +85,7 @@ const getVisibleNotesList = pipe([
   R.sortWith([R.descend(R.propOr(0, 'modifiedAt'))]),
 ])
 
-function NoteItem({ note, actions }) {
+const NoteItem = React.memo(function NoteItem({ note, actions }) {
   const dn = toDisplayNote(note)
   return (
     <ListItem id={noteIdToItemDomId(dn.id)} button>
@@ -111,7 +111,7 @@ function NoteItem({ note, actions }) {
       </ListItemSecondaryAction>
     </ListItem>
   )
-}
+})
 
 export const NoteList = withStyles(styles)(function NoteList({
   notes,
