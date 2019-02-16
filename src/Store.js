@@ -121,8 +121,6 @@ function useNotes() {
     return () => changes.cancel()
   }, [dbRef.current])
 
-  // const assocRevFromRes = res => R.assoc('_rev')(res.rev)
-
   const actions = useMemo(() => {
     return {
       addNew: async () => {
