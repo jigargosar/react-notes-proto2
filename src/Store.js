@@ -9,11 +9,15 @@ import useMousetrap from 'react-hook-mousetrap'
 import { C, compose, overProp, pipe } from './ramda-helpers'
 import PouchDB from 'pouchdb-browser'
 
+function newNoteContent() {
+  return faker.lorem.lines()
+}
+
 function newNote() {
   return {
     _id: `n_${nanoid()}`,
     _rev: null,
-    content: faker.lorem.lines(),
+    content: newNoteContent(),
     createdAt: Date.now(),
     modifiedAt: Date.now(),
   }
@@ -105,7 +109,7 @@ function useNotes() {
     return () => changes.cancel()
   }, [dbRef.current])
 
-  const assocRevFromRes = res => R.assoc('_rev')(res.rev)
+  // const assocRevFromRes = res => R.assoc('_rev')(res.rev)
 
   const actions = useMemo(() => {
     return {
@@ -113,9 +117,8 @@ function useNotes() {
         const db = dbRef.current
         const note = newNote()
         const res = await db.put(note)
-        const persistedNote = assocRevFromRes(res)(note)
-
-        dispatch({ type: 'notes.add', payload: persistedNote })
+        // const persistedNote = assocRevFromRes(res)(note)
+        // dispatch({ type: 'notes.add', payload: persistedNote })
       },
       delete: async id => {
         const db = dbRef.current
@@ -123,13 +126,19 @@ function useNotes() {
 
         await db.put({ ...persistedNote, _deleted: true })
       },
+      edit: async id => {
+        const db = dbRef.current
+        const persistedNote = await db.get(id)
+
+        await db.put({ ...persistedNote, content: newNoteContent() })
+      },
       replaceAll: docs =>
         dispatch({ type: 'notes.replaceAll', payload: docs }),
       handlePouchChange: change => {
         if (change.deleted) {
           dispatch({ type: 'notes.delete', payload: change.id })
         } else {
-          console.log(change)
+          dispatch({ type: 'notes.add', payload: change.doc })
         }
       },
     }
