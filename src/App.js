@@ -8,6 +8,20 @@ import { getCached } from './dom-helpers'
 import { useCacheEffect } from './hooks'
 import { Console, Hook } from 'console-feed'
 import * as R from 'ramda'
+import faker from 'faker'
+import nanoid from 'nanoid'
+
+function createFakeItem() {
+  return {
+    id: nanoid(),
+    fName: faker.name.firstName(),
+    lName: faker.name.lastName(),
+  }
+}
+
+function createFakeItemArray() {
+  return R.times(createFakeItem, 10)
+}
 
 const App = function() {
   const [notes, dispatch] = useReducer(
@@ -39,12 +53,7 @@ const App = function() {
 
   useEffect(() => {
     setTimeout(() => {
-      console.table([
-        {
-          name: 'Wow tracing',
-          title: 'Fake Title',
-        },
-      ])
+      console.table(createFakeItemArray())
     }, 1000)
   }, [])
 
