@@ -43,7 +43,7 @@ export function getInitialNotes() {
 }
 
 export function initNotes(maybeNotes) {
-  return getInitialNotes()
+  return maybeNotes || getInitialNotes()
 }
 
 export function notesReducer(state, action) {
