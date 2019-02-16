@@ -6,6 +6,7 @@ import { getCached } from './dom-helpers'
 import { useCacheEffect } from './hooks'
 import { Hook } from 'console-feed'
 import validate from 'aproba'
+import useMousetrap from 'react-hook-mousetrap'
 
 function newNote() {
   return {
@@ -98,6 +99,8 @@ export function useStore() {
 
     return { con: conActions }
   }, [])
+
+  useMousetrap('`', actions.con.toggle)
 
   return [con, notes.map(toDisplayNote), actions]
 }
