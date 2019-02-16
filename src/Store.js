@@ -123,19 +123,21 @@ function useNotes() {
   const actions = useMemo(() => {
     const dbPut = doc => dbRef.current.put(doc)
     const dbGet = id => dbRef.current.get(id)
+    const dbPatch = async patch => {
+      const doc = await dbGet(patch._id)
+      return dbPut(R.mergeLeft(patch)(doc))
+    }
 
     return {
       addNew: async () => {
         const note = newNote()
         await dbPut(note)
       },
-      delete: async id => {
-        const persistedNote = await dbGet(id)
-        await dbPut({ ...persistedNote, _deleted: true })
+      delete: async _id => {
+        await dbPatch({ _id, _deleted: true })
       },
-      edit: async id => {
-        const persistedNote = await dbGet(id)
-        await dbPut({ ...persistedNote, content: newNoteContent() })
+      edit: async _id => {
+        await dbPatch({ _id, content: newNoteContent() })
       },
 
       initFromAllDocsResult: docs =>
