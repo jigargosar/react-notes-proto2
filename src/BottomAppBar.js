@@ -64,5 +64,3 @@ function BottomAppBar({ classes, con }) {
 }
 
 export default withStyles(styles)(BottomAppBar)
-
-console.error('sf')
