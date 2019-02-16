@@ -8,6 +8,7 @@ import { Console } from 'console-feed'
 import * as R from 'ramda'
 import faker from 'faker'
 import nanoid from 'nanoid'
+import Slide from '@material-ui/core/Slide'
 
 function createFakeItem() {
   return {
@@ -33,13 +34,27 @@ const App = function() {
   return (
     <Fragment>
       <CssBaseline />
-      <div
-        id="console-container"
-        style={{ maxHeight: '100vh' }}
-        className="fixed max-vh-100 z-9999 overflow-container"
+      <Slide
+        direction="down"
+        in={!con.hidden && con.logs.length > 0}
+        mountOnEnter
+        unmountOnExit
       >
-        {con.hidden || <Console logs={con.logs} variant="dark" />}
-      </div>
+        <div
+          id="console-container"
+          style={{ maxHeight: '100vh' }}
+          className="fixed max-vh-100 z-9999 overflow-container"
+        >
+          {<Console logs={con.logs} variant="dark" />}
+        </div>
+      </Slide>
+      {/*<div*/}
+      {/*  id="console-container"*/}
+      {/*  style={{ maxHeight: '100vh' }}*/}
+      {/*  className="fixed max-vh-100 z-9999 overflow-container"*/}
+      {/*>*/}
+      {/*  {con.hidden || <Console logs={con.logs} variant="dark" />}*/}
+      {/*</div>*/}
       <NoteList notes={displayNotes} />
       <BottomAppBar con={con} actions={actions} />
     </Fragment>
