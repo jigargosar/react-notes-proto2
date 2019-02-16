@@ -105,13 +105,13 @@ const NoteItem = React.memo(function NoteItem({ note, actions }) {
       <ListItemSecondaryAction>
         <IconButton
           aria-label="Delete"
-          onClick={() => actions.notes.edit(dn.id)}
+          onClick={() => actions.notes.edit(note)}
         >
           <EditIcon />
         </IconButton>
         <IconButton
           aria-label="Delete"
-          onClick={() => actions.notes.delete(dn.id)}
+          onClick={() => actions.notes.delete(note)}
         >
           <DeleteIcon />
         </IconButton>

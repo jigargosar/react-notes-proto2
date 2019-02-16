@@ -128,15 +128,20 @@ function useNotes() {
       return dbPut(R.mergeLeft(patch)(doc))
     }
 
+    async function patchNote(patch, note) {
+      const { _id, _rev } = note
+      await dbPatch({ _id, _rev, ...patch })
+    }
+
     return {
       addNew: async () => {
         await dbPut(newNote())
       },
-      delete: async _id => {
-        await dbPatch({ _id, _deleted: true })
+      delete: async note => {
+        await patchNote({ _deleted: true }, note)
       },
-      edit: async _id => {
-        await dbPatch({ _id, content: newNoteContent() })
+      edit: async note => {
+        await patchNote({ content: newNoteContent() }, note)
       },
 
       initFromAllDocsResult: docs =>
