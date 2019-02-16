@@ -2,7 +2,7 @@ import Slide from '@material-ui/core/Slide'
 import { Console } from 'console-feed'
 import React from 'react'
 
-export function TopConsole({ con: { hidden, logs } }) {
+function TopConsole({ con: { hidden, logs } }) {
   return (
     <Slide
       direction="down"
@@ -19,3 +19,5 @@ export function TopConsole({ con: { hidden, logs } }) {
     </Slide>
   )
 }
+
+export default TopConsole

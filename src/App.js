@@ -6,8 +6,8 @@ import { useStore } from './Store'
 import * as R from 'ramda'
 import faker from 'faker'
 import nanoid from 'nanoid'
-import { TopConsole } from './TopConsole'
 import BottomAppBar from './BottomAppBar'
+import TopConsole from './TopConsole'
 
 function createFakeItem() {
   return {
