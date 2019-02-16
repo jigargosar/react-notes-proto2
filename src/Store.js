@@ -104,23 +104,30 @@ function useNotes() {
 
   useEffect(() => {
     const db = new PouchDB('notes')
-    dbRef.current = db
     fetchAllDocs(db)
       .then(actions.initFromAllDocsResult)
       .catch(console.error)
-    return () => {
-      db.close()
-    }
-  }, [])
 
-  useEffect(() => {
-    const db = dbRef.current
     const changes = db
       .changes({ live: true, include_docs: true, since: 'now' })
       .on('change', actions.handlePouchChange)
       .on('error', console.error)
-    return () => changes.cancel()
+
+    dbRef.current = db
+    return () => {
+      changes.cancel()
+      db.close()
+    }
   }, [])
+
+  // useEffect(() => {
+  //   const db = dbRef.current
+  //   const changes = db
+  //     .changes({ live: true, include_docs: true, since: 'now' })
+  //     .on('change', actions.handlePouchChange)
+  //     .on('error', console.error)
+  //   return () => changes.cancel()
+  // }, [])
 
   const actions = useMemo(() => {
     const dbPut = doc => dbRef.current.put(doc)
