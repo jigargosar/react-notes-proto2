@@ -40,8 +40,8 @@ export function initNotes(maybeNotes) {
 
 export function notesReducer(state, action) {
   switch (action.type) {
-    case 'notes.addNew':
-      return R.prepend(newNote())(state)
+    case 'notes.add':
+      return R.prepend(action.payload)(state)
     case 'notes.delete':
       return state
     case 'notes.reset':
@@ -62,7 +62,7 @@ function useNotes() {
 
   const actions = useMemo(() => {
     return {
-      addNew: () => dispatch({ type: 'notes.addNew' }),
+      addNew: () => dispatch({ type: 'notes.add', payload: newNote() }),
     }
   }, [])
   return [notes, actions]
