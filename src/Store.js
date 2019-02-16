@@ -66,8 +66,8 @@ function consoleReducer(state, action) {
   }
 }
 
-function getInitialConsoleState() {
-  return getCached('console') || { logs: [], hidden: false }
+function initConsole({ logs, hidden } = {}) {
+  return { logs: logs || [], hidden: hidden || false }
 }
 
 export function useStore() {
@@ -75,7 +75,8 @@ export function useStore() {
 
   const [con, conDispatch] = useReducer(
     consoleReducer,
-    getInitialConsoleState(),
+    getCached('console'),
+    initConsole,
   )
 
   useCacheEffect('notes', notes)
