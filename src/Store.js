@@ -76,9 +76,11 @@ async function fetchAllDocs(db) {
   return res.rows.map(R.prop('doc'))
 }
 
+const enhancedNotesReducer = compose([R.tap(console.log), notesReducer])
+
 function useNotes() {
   const [notes, dispatch] = useReducer(
-    compose([R.tap(console.log), notesReducer]),
+    enhancedNotesReducer,
     getCached('notes'),
     initNotes,
   )
@@ -116,7 +118,8 @@ function useNotes() {
       addNew: async () => {
         const db = dbRef.current
         const note = newNote()
-        const res = await db.put(note)
+        await db.put(note)
+        // const res = await db.put(note)
         // const persistedNote = assocRevFromRes(res)(note)
         // dispatch({ type: 'notes.add', payload: persistedNote })
       },
