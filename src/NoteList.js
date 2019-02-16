@@ -61,25 +61,25 @@ function noteIdToItemDomId(lastAddedId) {
   return `nli--${lastAddedId}`
 }
 
-function NoteItem({ dn, actions }) {
+function NoteItem({ note, actions }) {
   return (
-    <ListItem id={noteIdToItemDomId(dn.id)} button>
+    <ListItem id={noteIdToItemDomId(note.id)} button>
       <ListItemText
         primary={
           <Typography variant="subtitle1" noWrap>
-            {dn.primary}
+            {note.primary}
           </Typography>
         }
         secondary={
           <Typography variant={'body1'} color="textSecondary" noWrap>
-            {dn.secondary}
+            {note.secondary}
           </Typography>
         }
       />
       <ListItemSecondaryAction>
         <IconButton
           aria-label="Delete"
-          onClick={() => actions.notes.delete(dn.id)}
+          onClick={() => actions.notes.delete(note.id)}
         >
           <DeleteIcon />
         </IconButton>
@@ -112,8 +112,8 @@ export const NoteList = withStyles(styles)(function NoteList({
         Notes
       </Typography>
       <List className={classes.list}>
-        {getDisplayNotes(notes).map(dn => {
-          return <NoteItem key={dn.id} actions={actions} dn={dn} />
+        {getDisplayNotes(notes).map(note => {
+          return <NoteItem key={note.id} actions={actions} note={note} />
         })}
       </List>
     </Paper>
