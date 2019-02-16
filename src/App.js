@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from 'react'
+import React, { Fragment } from 'react'
 import { withStyles } from '@material-ui/styles'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import { NoteList } from './NoteList'
@@ -21,14 +21,10 @@ function createFakeItemArray() {
   return R.times(createFakeItem, 3)
 }
 
+createFakeItemArray()
+
 function App() {
   const [con, displayNotes, actions] = useStore()
-
-  useEffect(() => {
-    setTimeout(() => {
-      console.table(createFakeItemArray())
-    }, 1000)
-  }, [])
 
   return (
     <Fragment>
