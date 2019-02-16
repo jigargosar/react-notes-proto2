@@ -77,7 +77,7 @@ function noteIdToItemDomId(lastAddedId) {
 
 function NoteItem({ dn, avatarClassName, actions }) {
   return (
-    <ListItem key={dn.id} id={noteIdToItemDomId(dn.id)} button>
+    <ListItem id={noteIdToItemDomId(dn.id)} button>
       <Avatar className={avatarClassName} alt="Profile Picture">
         {dn.person}
       </Avatar>
@@ -134,6 +134,7 @@ export const NoteList = withStyles(styles)(function NoteList({
           const avatarClassName = avatarClassNameAt(idx)
           return (
             <NoteItem
+              key={dn.id}
               actions={actions}
               avatarClassName={avatarClassName}
               dn={dn}
