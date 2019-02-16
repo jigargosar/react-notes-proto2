@@ -8,6 +8,7 @@ import MenuIcon from '@material-ui/icons/Menu'
 import AddIcon from '@material-ui/icons/Add'
 import SearchIcon from '@material-ui/icons/Search'
 import MoreIcon from '@material-ui/icons/MoreVert'
+import { compose } from './ramda-helpers'
 
 function styles(theme) {
   return {
@@ -64,4 +65,4 @@ function BottomAppBar({ classes, actions }) {
   )
 }
 
-export default withStyles(styles)(BottomAppBar)
+export default compose([React.memo, withStyles(styles)])(BottomAppBar)
