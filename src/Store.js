@@ -37,12 +37,22 @@ export function notesReducer(state, action) {
   const overById = overProp('byId')
   const payload = action.payload
   switch (action.type) {
-    case 'notes.addNew':
+    case 'notes.addNew': {
       const note = newNote()
       const mergeNewNote = overById(R.mergeLeft(R.objOf(note._id)(note)))
       return compose([R.assoc('lastAddedId', note._id), mergeNewNote])(
         state,
       )
+    }
+    case 'notes.add': {
+      const note = newNote()
+      const mergeNewNote = overById(R.mergeLeft(R.objOf(note._id)(note)))
+      const addNote = compose([
+        R.assoc('lastAddedId', note._id),
+        mergeNewNote,
+      ])
+      return addNote(state)
+    }
     case 'notes.delete':
       return pipe([overById(R.omit([payload]))])(state)
     case 'notes.replaceAll':
@@ -54,7 +64,7 @@ export function notesReducer(state, action) {
 }
 
 async function fetchAllDocs(db) {
-  const res = await db.allDocs()
+  const res = await db.allDocs({ include_docs: true })
   return res.rows.map(R.prop('doc'))
 }
 
