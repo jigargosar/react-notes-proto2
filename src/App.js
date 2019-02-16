@@ -27,14 +27,24 @@ const App = function() {
     let disposed = false
     Hook(window.console, newLogs => {
       if (disposed) return
-      setLogs(R.concat(R.__, newLogs))
+      setLogs(
+        R.compose(
+          R.takeLast(3),
+          R.concat(R.__, newLogs),
+        ),
+      )
     })
     return () => (disposed = true)
   }, [])
 
   useEffect(() => {
     setTimeout(() => {
-      console.table([{ name: 'Wow tracing' }])
+      console.table([
+        {
+          name: 'Wow tracing',
+          title: 'Fake Title',
+        },
+      ])
     }, 1000)
   }, [])
 
