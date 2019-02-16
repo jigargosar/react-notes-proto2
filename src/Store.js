@@ -112,9 +112,9 @@ function useNotes() {
       },
       delete: async id => {
         const db = dbRef.current
-        const existing = await db.get(id)
+        const persistedNote = await db.get(id)
 
-        await db.put({ ...existing, _deleted: true })
+        await db.put({ ...persistedNote, _deleted: true })
         dispatch({ type: 'notes.delete', payload: id })
       },
       replaceAll: docs =>
