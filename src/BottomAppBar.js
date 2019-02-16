@@ -9,6 +9,7 @@ import AddIcon from '@material-ui/icons/Add'
 import SearchIcon from '@material-ui/icons/Search'
 import MoreIcon from '@material-ui/icons/MoreVert'
 import Switch from '@material-ui/core/Switch'
+import Badge from '@material-ui/core/Badge'
 
 function styles(theme) {
   return {
@@ -59,6 +60,10 @@ export const BottomAppBar = withStyles(styles)(function BottomAppBar({
           <Switch
             checked={!con.hidden}
             onChange={() => actions.con.toggle()}
+          />
+          <Badge
+            className={classes.margin}
+            badgeContent={con.logs.length}
           />
           <IconButton color="inherit">
             <SearchIcon />
