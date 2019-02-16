@@ -16,3 +16,8 @@ code {
 .bg-dark {
   background-color: rgba(0, 0, 0, 0.8);
 }
+
+#console-container * {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}

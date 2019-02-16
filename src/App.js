@@ -60,7 +60,7 @@ const App = function() {
   return (
     <Fragment>
       <CssBaseline />
-      <div style={{ backgroundColor: '#242424' }}>
+      <div id="console-container" style={{ backgroundColor: '#242424' }}>
         <Console logs={logs} variant="dark" />
       </div>
       <NoteList notes={displayNotes} dispatch={dispatch} />
