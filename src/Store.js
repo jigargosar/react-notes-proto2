@@ -1,7 +1,7 @@
 import * as R from 'ramda'
 import nanoid from 'nanoid'
 import faker from 'faker'
-import { useEffect, useReducer } from 'react'
+import { useEffect, useMemo, useReducer } from 'react'
 import { getCached } from './dom-helpers'
 import { useCacheEffect } from './hooks'
 import { Hook } from 'console-feed'
@@ -60,7 +60,7 @@ function consoleReducer(state, action) {
       ])
       return overProp('logs')(appendNewLogsAndLimit)(state)
     case 'con.toggle':
-      return overProp('hidden', R.not, state)
+      return overProp('hidden')(R.not)(state)
     default:
       throw new Error('[consoleReducer] Invalid Action')
   }
@@ -95,7 +95,15 @@ export function useStore() {
     return () => void (disposed = true)
   }, [])
 
-  return [con, notes.map(toDisplayNote)]
+  const actions = useMemo(() => {
+    const conActions = {
+      toggle: () => conDispatch({ type: 'con.toggle' }),
+    }
+
+    return { con: conActions }
+  }, [])
+
+  return [con, notes.map(toDisplayNote), actions]
 }
 
 //*** HELPERS ***

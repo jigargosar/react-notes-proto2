@@ -22,7 +22,7 @@ function createFakeItemArray() {
 }
 
 const App = function() {
-  const [con, displayNotes] = useStore()
+  const [con, displayNotes, actions] = useStore()
 
   useEffect(() => {
     setTimeout(() => {
@@ -34,10 +34,10 @@ const App = function() {
     <Fragment>
       <CssBaseline />
       <div id="console-container" style={{ backgroundColor: '#242424' }}>
-        <Console logs={con.logs} variant="dark" />
+        {con.hidden || <Console logs={con.logs} variant="dark" />}
       </div>
       <NoteList notes={displayNotes} />
-      <BottomAppBar />
+      <BottomAppBar con={con} actions={actions} />
     </Fragment>
   )
 }

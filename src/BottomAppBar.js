@@ -8,6 +8,7 @@ import MenuIcon from '@material-ui/icons/Menu'
 import AddIcon from '@material-ui/icons/Add'
 import SearchIcon from '@material-ui/icons/Search'
 import MoreIcon from '@material-ui/icons/MoreVert'
+import Switch from '@material-ui/core/Switch'
 
 function styles(theme) {
   return {
@@ -36,27 +37,37 @@ function styles(theme) {
   }
 }
 
-export const BottomAppBar = withStyles(styles)(({ classes }) => (
-  <AppBar position="fixed" color="primary" className={classes.appBar}>
-    <Toolbar className={classes.toolbar}>
-      <IconButton color="inherit" aria-label="Open drawer">
-        <MenuIcon />
-      </IconButton>
-      <Fab
-        color="secondary"
-        aria-label="Add"
-        className={classes.fabButton}
-      >
-        <AddIcon />
-      </Fab>
-      <div>
-        <IconButton color="inherit">
-          <SearchIcon />
+export const BottomAppBar = withStyles(styles)(function BottomAppBar({
+  classes,
+  con,
+  actions,
+}) {
+  return (
+    <AppBar position="fixed" color="primary" className={classes.appBar}>
+      <Toolbar className={classes.toolbar}>
+        <IconButton color="inherit" aria-label="Open drawer">
+          <MenuIcon />
         </IconButton>
-        <IconButton color="inherit">
-          <MoreIcon />
-        </IconButton>
-      </div>
-    </Toolbar>
-  </AppBar>
-))
+        <Fab
+          color="secondary"
+          aria-label="Add"
+          className={classes.fabButton}
+        >
+          <AddIcon />
+        </Fab>
+        <div>
+          <Switch
+            checked={!con.hidden}
+            onChange={() => actions.con.toggle()}
+          />
+          <IconButton color="inherit">
+            <SearchIcon />
+          </IconButton>
+          <IconButton color="inherit">
+            <MoreIcon />
+          </IconButton>
+        </div>
+      </Toolbar>
+    </AppBar>
+  )
+})
