@@ -13,6 +13,9 @@ import cyan from '@material-ui/core/colors/cyan'
 import amber from '@material-ui/core/colors/amber'
 import green from '@material-ui/core/colors/green'
 import { getDisplayNotes } from './Store'
+import IconButton from '@material-ui/core/IconButton'
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
+import DeleteIcon from '@material-ui/icons/Delete'
 
 function styles(theme) {
   return {
@@ -131,6 +134,11 @@ export const NoteList = withStyles(styles)(function NoteList({
                       </Typography>
                     }
                   />
+                  <ListItemSecondaryAction>
+                    <IconButton aria-label="Delete">
+                      <DeleteIcon />
+                    </IconButton>
+                  </ListItemSecondaryAction>
                 </ListItem>
               </Fragment>
             )
