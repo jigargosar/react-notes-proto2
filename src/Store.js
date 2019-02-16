@@ -106,21 +106,6 @@ function useNotes() {
     }
   }, [])
 
-  useEffect(() => {
-    const db = dbRef.current
-    if (!db) return
-
-    fetchAllDocs(db)
-      .then(actions.replaceAll)
-      .catch(console.error)
-
-    const changes = db
-      .changes({ live: true, include_docs: true, since: 'now' })
-      .on('change', actions.handlePouchChange)
-      .on('error', console.error)
-    return () => changes.cancel()
-  }, [dbRef.current])
-
   const actions = useMemo(() => {
     return {
       addNew: async () => {
@@ -151,6 +136,22 @@ function useNotes() {
       },
     }
   }, [])
+
+  useEffect(() => {
+    const db = dbRef.current
+    if (!db) return
+
+    fetchAllDocs(db)
+      .then(actions.replaceAll)
+      .catch(console.error)
+
+    const changes = db
+      .changes({ live: true, include_docs: true, since: 'now' })
+      .on('change', actions.handlePouchChange)
+      .on('error', console.error)
+    return () => changes.cancel()
+  }, [dbRef.current])
+
   return [notes, actions]
 }
 
