@@ -108,7 +108,7 @@ export const NoteList = withStyles(styles)(function NoteList({
                     Yesterday
                   </ListSubheader>
                 )}
-                <ListItem button>
+                <ListItem id={noteIdToItemDomId(id)} button>
                   <Avatar
                     className={getAvatarClassName(classes)(idx)}
                     alt="Profile Picture"
