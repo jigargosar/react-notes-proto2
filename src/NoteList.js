@@ -2,7 +2,7 @@ import { withStyles } from '@material-ui/styles'
 import Paper from '@material-ui/core/Paper'
 import Typography from '@material-ui/core/Typography'
 import List from '@material-ui/core/List'
-import React, { Fragment, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import ListItem from '@material-ui/core/ListItem'
 import Avatar from '@material-ui/core/Avatar'
 import ListItemText from '@material-ui/core/ListItemText'
@@ -58,7 +58,7 @@ function styles(theme) {
   }
 }
 
-function getAvatarClassName(classes) {
+function createAvatarClassNameComputer(classes) {
   return idx => {
     const avatarClasses = [
       classes.avatar1,
@@ -73,6 +73,36 @@ function getAvatarClassName(classes) {
 
 function noteIdToItemDomId(lastAddedId) {
   return `nli--${lastAddedId}`
+}
+
+function NoteItem({ dn, avatarClassName, actions }) {
+  return (
+    <ListItem key={dn.id} id={noteIdToItemDomId(dn.id)} button>
+      <Avatar className={avatarClassName} alt="Profile Picture">
+        {dn.person}
+      </Avatar>
+      <ListItemText
+        primary={
+          <Typography variant="subtitle1" noWrap>
+            {dn.primary}
+          </Typography>
+        }
+        secondary={
+          <Typography variant={'body1'} color="textSecondary" noWrap>
+            {dn.secondary}
+          </Typography>
+        }
+      />
+      <ListItemSecondaryAction>
+        <IconButton
+          aria-label="Delete"
+          onClick={() => actions.notes.delete(dn.id)}
+        >
+          <DeleteIcon />
+        </IconButton>
+      </ListItemSecondaryAction>
+    </ListItem>
+  )
 }
 
 export const NoteList = withStyles(styles)(function NoteList({
@@ -92,52 +122,24 @@ export const NoteList = withStyles(styles)(function NoteList({
       }
     }
   }, lastAddedId)
+  const avatarClassNameAt = createAvatarClassNameComputer(classes)
+
   return (
     <Paper square className={classes.paper}>
       <Typography className={classes.text} variant="h5" gutterBottom>
         Notes
       </Typography>
       <List className={classes.list}>
-        {getDisplayNotes(notes).map(
-          ({ id, primary, secondary, person }, idx) => {
-            return (
-              <Fragment key={id}>
-                <ListItem id={noteIdToItemDomId(id)} button>
-                  <Avatar
-                    className={getAvatarClassName(classes)(idx)}
-                    alt="Profile Picture"
-                  >
-                    {person}
-                  </Avatar>
-                  <ListItemText
-                    primary={
-                      <Typography variant="subtitle1" noWrap>
-                        {primary}
-                      </Typography>
-                    }
-                    secondary={
-                      <Typography
-                        variant={'body1'}
-                        color="textSecondary"
-                        noWrap
-                      >
-                        {secondary}
-                      </Typography>
-                    }
-                  />
-                  <ListItemSecondaryAction>
-                    <IconButton
-                      aria-label="Delete"
-                      onClick={() => actions.notes.delete(id)}
-                    >
-                      <DeleteIcon />
-                    </IconButton>
-                  </ListItemSecondaryAction>
-                </ListItem>
-              </Fragment>
-            )
-          },
-        )}
+        {getDisplayNotes(notes).map((dn, idx) => {
+          const avatarClassName = avatarClassNameAt(idx)
+          return (
+            <NoteItem
+              actions={actions}
+              avatarClassName={avatarClassName}
+              dn={dn}
+            />
+          )
+        })}
       </List>
     </Paper>
   )
