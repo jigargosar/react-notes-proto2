@@ -40,14 +40,15 @@ export function initNotes(maybeNotes) {
 
 export function notesReducer(state, action) {
   switch (action.type) {
-    case 'note.addNew':
+    case 'notes.addNew':
       return R.prepend(newNote())(state)
-    case 'note.delete':
+    case 'notes.delete':
       return state
-    case 'note.reset':
+    case 'notes.reset':
       return initNotes(action.payload)
     default:
-      throw new Error('[notesReducer] Invalid Action')
+      console.error('Invalid Action', action)
+      throw new Error('Invalid Action')
   }
 }
 
