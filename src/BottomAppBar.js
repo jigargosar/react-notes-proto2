@@ -8,6 +8,7 @@ import MenuIcon from '@material-ui/icons/Menu'
 import AddIcon from '@material-ui/icons/Add'
 import SearchIcon from '@material-ui/icons/Search'
 import MoreIcon from '@material-ui/icons/MoreVert'
+import QueueIcon from '@material-ui/icons/Queue'
 import Switch from '@material-ui/core/Switch'
 import Badge from '@material-ui/core/Badge'
 
@@ -64,10 +65,12 @@ export const BottomAppBar = withStyles(styles)(function BottomAppBar({
             checked={!con.hidden}
             onChange={() => actions.con.toggle()}
           />
-          <Badge
-            className={classes.margin}
-            badgeContent={con.logs.length}
-          />
+          <Badge className={classes.margin} badgeContent={con.logs.length}>
+            L
+          </Badge>
+          <IconButton color="inherit">
+            <QueueIcon />
+          </IconButton>
           <IconButton color="inherit">
             <SearchIcon />
           </IconButton>
@@ -79,3 +82,5 @@ export const BottomAppBar = withStyles(styles)(function BottomAppBar({
     </AppBar>
   )
 })
+
+console.error('sf')
