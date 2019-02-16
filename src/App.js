@@ -21,15 +21,18 @@ const App = function() {
 
   const [logs, setLogs] = useState([])
 
+  setTimeout(() => {
+    throw new Error('foo')
+  }, 1000)
+
   useEffect(() => {
     let disposed = false
-    const newConsole = Hook(window.console, log => {
+    Hook(window.console, log => {
       if (disposed) return
       setLogs(logs => [...logs, Decode(log)])
     })
     return () => {
       disposed = true
-      Object.assign(newConsole, newConsole.feed.pointers)
     }
   }, [])
 
