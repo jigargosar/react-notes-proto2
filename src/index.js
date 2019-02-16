@@ -39,5 +39,5 @@ render()
 serviceWorker.unregister()
 
 if (module.hot) {
-  module.hot.accept(render)
+  module.hot.accept(['./App'], render)
 }

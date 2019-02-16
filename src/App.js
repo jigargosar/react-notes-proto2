@@ -34,3 +34,5 @@ if (module.hot) {
     console.clear()
   })
 }
+
+console.log('foo')
