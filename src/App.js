@@ -18,7 +18,7 @@ function createFakeItem() {
 }
 
 function createFakeItemArray() {
-  return R.times(createFakeItem, 10)
+  return R.times(createFakeItem, 30)
 }
 
 const App = function() {
@@ -33,11 +33,15 @@ const App = function() {
   return (
     <Fragment>
       <CssBaseline />
-      <div id="console-container" style={{ backgroundColor: '#242424' }}>
-        {con.hidden || <Console logs={con.logs} variant="dark" />}
-      </div>
       <NoteList notes={displayNotes} />
       <BottomAppBar con={con} actions={actions} />
+      <div
+        id="console-container"
+        style={{ maxHeight: '100vh' }}
+        className="fixed top-0 z-9999 overflow-container"
+      >
+        {con.hidden || <Console logs={con.logs} variant="dark" />}
+      </div>
     </Fragment>
   )
 }
