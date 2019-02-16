@@ -59,7 +59,7 @@ export function notesReducer(state, action) {
       return pipe([overById(omit([payload])), R.dissoc('lastAddedId')])(
         state,
       )
-    case 'notes.replaceAll': {
+    case 'notes.initFromAllDocsResult': {
       // noinspection UnnecessaryLocalVariableJS
       const notes = payload
       const newById = notesListToById(notes)
@@ -105,6 +105,9 @@ function useNotes() {
   useEffect(() => {
     const db = new PouchDB('notes')
     dbRef.current = db
+    fetchAllDocs(db)
+      .then(actions.initFromAllDocsResult)
+      .catch(console.error)
     return () => {
       db.close()
     }
@@ -112,43 +115,41 @@ function useNotes() {
 
   useEffect(() => {
     const db = dbRef.current
-    if (!db) return
-
-    fetchAllDocs(db)
-      .then(actions.replaceAll)
-      .catch(console.error)
-
     const changes = db
       .changes({ live: true, include_docs: true, since: 'now' })
       .on('change', actions.handlePouchChange)
       .on('error', console.error)
-    return () => {
-      debugger
-      // debugger
-      return changes.cancel()
-    }
+    return () => changes.cancel()
   }, [])
 
+  function dbGet(id) {
+    return dbRef.current.get(id)
+  }
+
+  function dbPut(persistedNote) {
+    return dbRef.current.put({
+      ...persistedNote,
+      content: newNoteContent(),
+    })
+  }
+
   const actions = useMemo(() => {
-    const db = dbRef.current
     return {
       addNew: async () => {
         const note = newNote()
-        await db.put(note)
+        await dbRef.current.put(note)
       },
       delete: async id => {
-        const persistedNote = await db.get(id)
-
-        await db.put({ ...persistedNote, _deleted: true })
+        const persistedNote = await dbGet(id)
+        await dbRef.current.put({ ...persistedNote, _deleted: true })
       },
       edit: async id => {
-        const persistedNote = await db.get(id)
-
-        await db.put({ ...persistedNote, content: newNoteContent() })
+        const persistedNote = await dbGet(id)
+        await dbPut(persistedNote)
       },
 
-      replaceAll: docs =>
-        dispatch({ type: 'notes.replaceAll', payload: docs }),
+      initFromAllDocsResult: docs =>
+        dispatch({ type: 'notes.initFromAllDocsResult', payload: docs }),
 
       handlePouchChange: change => {
         if (change.deleted) {
@@ -158,7 +159,7 @@ function useNotes() {
         }
       },
     }
-  }, [dbRef.current])
+  }, [])
 
   return [notes, actions]
 }
