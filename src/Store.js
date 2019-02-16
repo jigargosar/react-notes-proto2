@@ -76,18 +76,6 @@ async function fetchAllDocs(db) {
   return res.rows.map(R.prop('doc'))
 }
 
-// const enhancedNotesReducer = compose([
-//   R.tap(notes => {
-//     const tabularData = pipe([
-//       R.prop('byId'),
-//       R.map(R.pick(['_rev', 'content'])),
-//     ])(notes)
-//
-//     console.table(tabularData)
-//   }),
-//   notesReducer,
-// ])
-
 function useNotes() {
   const [notes, _dispatch] = useReducer(
     notesReducer,
