@@ -52,7 +52,13 @@ export function notesReducer(state, action) {
   switch (action.type) {
     case 'notes.addNew':
       const note = newNote()
-      return overProp('byId')(R.mergeLeft(R.objOf(note._id)(note)))(state)
+      const mergeNewNote = overProp('byId')(
+        R.mergeLeft(R.objOf(note._id)(note)),
+      )
+      return compose(
+        R.assoc('lastAddedId', note._id),
+        mergeNewNote,
+      )(state)
     case 'notes.delete':
       return state
     case 'notes.reset':
