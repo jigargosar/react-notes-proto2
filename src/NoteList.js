@@ -77,6 +77,7 @@ function noteIdToItemDomId(lastAddedId) {
 
 export const NoteList = withStyles(styles)(function NoteList({
   notes,
+  actions,
   classes,
 }) {
   const lastAddedId = notes.lastAddedId
@@ -135,7 +136,10 @@ export const NoteList = withStyles(styles)(function NoteList({
                     }
                   />
                   <ListItemSecondaryAction>
-                    <IconButton aria-label="Delete">
+                    <IconButton
+                      aria-label="Delete"
+                      onClick={() => actions.notes.delete(id)}
+                    >
                       <DeleteIcon />
                     </IconButton>
                   </ListItemSecondaryAction>

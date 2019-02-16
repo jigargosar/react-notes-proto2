@@ -86,6 +86,7 @@ function useNotes() {
   const actions = useMemo(() => {
     return {
       addNew: () => dispatch({ type: 'notes.addNew' }),
+      delete: id => dispatch({ type: 'notes.delete', payload: id }),
     }
   }, [])
   return [notes, actions]

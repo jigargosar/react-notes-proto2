@@ -13,7 +13,7 @@ function App() {
     <Fragment>
       <CssBaseline />
       <TopConsole con={con} />
-      <NoteList notes={notes} />
+      <NoteList notes={notes} actions={actions} />
       <BottomAppBar con={con} actions={actions} />
     </Fragment>
   )
