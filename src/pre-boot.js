@@ -1,9 +1,9 @@
-import { Decode, Hook } from 'console-feed'
+// import { Decode, Hook } from 'console-feed'
+//
+// window.__logs = []
 
-window.__logs = []
-
-Hook(window.console, log => {
-  window.__logs.push(Decode(log))
-})
+// Hook(window.console, log => {
+//   window.__logs.push(Decode(log))
+// })
 
 require('@material-ui/styles').install()
