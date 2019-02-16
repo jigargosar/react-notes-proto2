@@ -1,12 +1,13 @@
 import * as R from 'ramda'
 import nanoid from 'nanoid'
 import faker from 'faker'
-import { useEffect, useMemo, useReducer } from 'react'
+import { useEffect, useMemo, useReducer, useRef } from 'react'
 import { getCached } from './dom-helpers'
 import { useCacheEffect } from './hooks'
 import { Hook } from 'console-feed'
 import useMousetrap from 'react-hook-mousetrap'
 import { compose, overProp, pipe } from './ramda-helpers'
+import PouchDB from 'pouchdb-browser'
 
 function newNote() {
   return {
@@ -59,6 +60,16 @@ function useNotes() {
     initNotes,
   )
   useCacheEffect('notes', notes)
+
+  const dbRef = useRef()
+
+  useEffect(() => {
+    const db = new PouchDB('notes')
+    dbRef.current = db
+    return () => {
+      db.close()
+    }
+  }, [])
 
   const actions = useMemo(() => {
     return {
