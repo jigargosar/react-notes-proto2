@@ -67,7 +67,7 @@ function consoleReducer(state, action) {
 }
 
 function initConsole({ logs, hidden } = {}) {
-  return { logs: logs || [], hidden: hidden || false }
+  return { logs: [], hidden: hidden || false }
 }
 
 export function useStore() {
