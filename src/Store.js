@@ -83,10 +83,18 @@ function useNotes() {
       .then(actions.replaceAll)
       .catch(console.error)
   }, [dbRef.current])
+  const assocRevFromRes = res => R.assoc('_rev')(res.rev)
 
   const actions = useMemo(() => {
     return {
-      addNew: () => dispatch({ type: 'notes.addNew' }),
+      addNew: async () => {
+        const db = dbRef.current
+        const note = newNote()
+        const res = await db.put(note)
+        const persistedNote = assocRevFromRes(res)(note)
+
+        dispatch({ type: 'notes.add', payload: persistedNote })
+      },
       delete: id => dispatch({ type: 'notes.delete', payload: id }),
       replaceAll: docs =>
         dispatch({ type: 'notes.replaceAll', payload: docs }),
