@@ -17,6 +17,8 @@ function newNote() {
 }
 
 export function toDisplayNote(note) {
+  validate('O', arguments)
+
   const [primary, ...rest] = note.content.trim().split('\n')
 
   return {
@@ -31,17 +33,24 @@ export function toDisplayNote(note) {
 }
 
 export function getInitialNotes() {
-  return R.times(newNote, 10)
+  const notes = R.times(newNote, 10)
+  return {
+    byId: notes.reduce((acc, n) => {
+      acc[n._id] = n
+      return acc
+    }, {}),
+  }
 }
 
 export function initNotes(maybeNotes) {
-  return maybeNotes || getInitialNotes()
+  return getInitialNotes()
 }
 
 export function notesReducer(state, action) {
   switch (action.type) {
-    case 'notes.add':
-      return R.prepend(action.payload)(state)
+    case 'notes.addNew':
+      const note = newNote()
+      return overProp('byId')(R.mergeLeft(R.of(note._id)(note)))(state)
     case 'notes.delete':
       return state
     case 'notes.reset':
@@ -62,7 +71,7 @@ function useNotes() {
 
   const actions = useMemo(() => {
     return {
-      addNew: () => dispatch({ type: 'notes.add', payload: newNote() }),
+      addNew: () => dispatch({ type: 'notes.addNew' }),
     }
   }, [])
   return [notes, actions]
@@ -122,14 +131,23 @@ export function useStore() {
 
   useMousetrap('`', conA.toggle)
 
-  const actions = useMemo(() => {
-    return {
+  const actions = useMemo(
+    () => ({
       con: conA,
       notes: notesA,
-    }
-  }, [])
+    }),
+    [],
+  )
 
-  return [con, notes.map(toDisplayNote), actions]
+  const getDisplayNotes = compose([
+    R.map(toDisplayNote),
+    R.values,
+    R.prop('byId'),
+  ])
+
+  debugger
+
+  return [con, getDisplayNotes(notes), actions]
 }
 
 //*** HELPERS ***
