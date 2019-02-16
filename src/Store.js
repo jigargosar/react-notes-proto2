@@ -71,10 +71,10 @@ export function notesReducer(state, action) {
   }
 }
 
-// async function fetchAllDocs(db) {
-//   const res = await db.allDocs({ include_docs: true })
-//   return res.rows.map(R.prop('doc'))
-// }
+async function fetchAllDocs(db) {
+  const res = await db.allDocs({ include_docs: true })
+  return res.rows.map(R.prop('doc'))
+}
 
 const enhancedNotesReducer = compose([
   R.tap(notes => {
@@ -110,12 +110,12 @@ function useNotes() {
     const db = dbRef.current
     if (!db) return
 
-    // fetchAllDocs(db)
-    //   .then(actions.replaceAll)
-    //   .catch(console.error)
+    fetchAllDocs(db)
+      .then(actions.replaceAll)
+      .catch(console.error)
 
     const changes = db
-      .changes({ live: true, include_docs: true })
+      .changes({ live: true, include_docs: true, since: 'now' })
       .on('change', actions.handlePouchChange)
       .on('error', console.error)
     return () => changes.cancel()
