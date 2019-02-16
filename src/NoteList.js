@@ -23,7 +23,7 @@ function styles(theme) {
     paper: {
       paddingBottom: spc2,
       maxWidth: theme.contentMaxWidth,
-      margin: '0 auto 50px',
+      margin: '0 auto 48px',
     },
     text: {
       paddingTop: spc2,
