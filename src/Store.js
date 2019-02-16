@@ -110,7 +110,13 @@ function useNotes() {
 
         dispatch({ type: 'notes.add', payload: persistedNote })
       },
-      delete: id => dispatch({ type: 'notes.delete', payload: id }),
+      delete: async id => {
+        const db = dbRef.current
+        const existing = await db.get(id)
+
+        await db.put({ ...existing, _deleted: true })
+        dispatch({ type: 'notes.delete', payload: id })
+      },
       replaceAll: docs =>
         dispatch({ type: 'notes.replaceAll', payload: docs }),
     }
