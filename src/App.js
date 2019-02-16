@@ -22,6 +22,24 @@ function createFakeItemArray() {
   return R.times(createFakeItem, 3)
 }
 
+function TopConsole({ con: { hidden, logs } }) {
+  return (
+    <Slide
+      direction="down"
+      in={!hidden && logs.length > 0}
+      mountOnEnter
+      unmountOnExit
+    >
+      <div
+        id="console-container"
+        className="fixed max-vh-100 z-9999 overflow-container"
+      >
+        {<Console logs={logs} variant="dark" />}
+      </div>
+    </Slide>
+  )
+}
+
 const App = function() {
   const [con, displayNotes, actions] = useStore()
 
@@ -34,19 +52,7 @@ const App = function() {
   return (
     <Fragment>
       <CssBaseline />
-      <Slide
-        direction="down"
-        in={!con.hidden && con.logs.length > 0}
-        mountOnEnter
-        unmountOnExit
-      >
-        <div
-          id="console-container"
-          className="fixed max-vh-100 z-9999 overflow-container"
-        >
-          {<Console logs={con.logs} variant="dark" />}
-        </div>
-      </Slide>
+      <TopConsole con={con} />
       <NoteList notes={displayNotes} />
       <BottomAppBar con={con} actions={actions} />
     </Fragment>
