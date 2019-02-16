@@ -71,38 +71,42 @@ function initConsole({ logs, hidden } = {}) {
   return { logs: [], hidden: hidden || false }
 }
 
-export function useStore() {
-  const [notes] = useReducer(notesReducer, getCached('notes'), initNotes)
-
-  const [con, conDispatch] = useReducer(
+function useConsole() {
+  const [con, dispatch] = useReducer(
     consoleReducer,
     getCached('console'),
     initConsole,
   )
 
-  useCacheEffect('notes', notes)
   useCacheEffect('console', con)
 
   useEffect(() => {
     let disposed = false
     Hook(window.console, newLogs => {
       if (disposed) return
-      conDispatch({ type: 'con.addLogs', payload: newLogs })
+      dispatch({ type: 'con.addLogs', payload: newLogs })
     })
     return () => void (disposed = true)
   }, [])
 
   const actions = useMemo(() => {
-    const conActions = {
-      toggle: () => conDispatch({ type: 'con.toggle' }),
+    return {
+      toggle: () => dispatch({ type: 'con.toggle' }),
     }
-
-    return { con: conActions }
   }, [])
 
-  useMousetrap('`', actions.con.toggle)
+  return [con, actions]
+}
 
-  return [con, notes.map(toDisplayNote), actions]
+export function useStore() {
+  const [notes] = useReducer(notesReducer, getCached('notes'), initNotes)
+  useCacheEffect('notes', notes)
+
+  const [con, conA] = useConsole()
+
+  useMousetrap('`', conA.toggle)
+
+  return [con, notes.map(toDisplayNote)]
 }
 
 //*** HELPERS ***
