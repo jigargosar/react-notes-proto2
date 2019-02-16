@@ -36,7 +36,7 @@ function styles(theme) {
   }
 }
 
-function BottomAppBar({ classes, con }) {
+function BottomAppBar({ classes, actions }) {
   return (
     <AppBar position="fixed" color="primary" className={classes.appBar}>
       <Toolbar className={classes.toolbar}>
@@ -47,6 +47,7 @@ function BottomAppBar({ classes, con }) {
           color="secondary"
           aria-label="Add"
           className={classes.fabButton}
+          onClick={actions.notes.addNew}
         >
           <AddIcon />
         </Fab>

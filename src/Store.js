@@ -40,7 +40,7 @@ export function initNotes(maybeNotes) {
 
 export function notesReducer(state, action) {
   switch (action.type) {
-    case 'note.add':
+    case 'note.addNew':
       return state
     case 'note.delete':
       return state
@@ -49,6 +49,22 @@ export function notesReducer(state, action) {
     default:
       throw new Error('[notesReducer] Invalid Action')
   }
+}
+
+function useNotes() {
+  const [notes, dispatch] = useReducer(
+    notesReducer,
+    getCached('notes'),
+    initNotes,
+  )
+  useCacheEffect('notes', notes)
+
+  const actions = useMemo(() => {
+    return {
+      addNew: () => dispatch({ type: 'notes.addNew' }),
+    }
+  }, [])
+  return [notes, actions]
 }
 
 function consoleReducer(state, action) {
@@ -67,7 +83,7 @@ function consoleReducer(state, action) {
   }
 }
 
-function initConsole({ logs, hidden } = {}) {
+function initConsole({ hidden } = {}) {
   return { logs: [], hidden: hidden || false }
 }
 
@@ -99,14 +115,20 @@ function useConsole() {
 }
 
 export function useStore() {
-  const [notes] = useReducer(notesReducer, getCached('notes'), initNotes)
-  useCacheEffect('notes', notes)
+  const [notes, notesA] = useNotes()
 
   const [con, conA] = useConsole()
 
   useMousetrap('`', conA.toggle)
 
-  return [con, notes.map(toDisplayNote)]
+  const actions = useMemo(() => {
+    return {
+      con: conA,
+      notes: notesA,
+    }
+  }, [])
+
+  return [con, notes.map(toDisplayNote), actions]
 }
 
 //*** HELPERS ***
