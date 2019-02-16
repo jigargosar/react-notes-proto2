@@ -1,9 +1,11 @@
 import * as R from 'ramda'
 import nanoid from 'nanoid'
 import faker from 'faker'
-import { useReducer } from 'react'
+import { useEffect, useReducer } from 'react'
 import { getCached } from './dom-helpers'
 import { useCacheEffect } from './hooks'
+import { Hook } from 'console-feed'
+import validate from 'aproba'
 
 function newNote() {
   return {
@@ -44,14 +46,76 @@ export function notesReducer(state, action) {
     case 'note.reset':
       return initNotes(action.payload)
     default:
-      throw new Error('Invalid Action')
+      throw new Error('[notesReducer] Invalid Action')
   }
+}
+
+function consoleReducer(state, action) {
+  const { payload } = action
+  switch (action.type) {
+    case 'con.addLogs':
+      const appendNewLogsAndLimit = compose([
+        R.takeLast(3),
+        R.concat(R.__, payload),
+      ])
+      return overProp('logs')(appendNewLogsAndLimit)(state)
+    case 'note.delete':
+      return state
+    default:
+      throw new Error('[consoleReducer] Invalid Action')
+  }
+}
+
+function getInitialConsoleState() {
+  return { logs: getCached('logs') || [], hidden: false }
 }
 
 export function useStore() {
   const [notes] = useReducer(notesReducer, getCached('notes'), initNotes)
 
+  const [con, conDispatch] = useReducer(
+    consoleReducer,
+    getInitialConsoleState(),
+  )
+
   useCacheEffect('notes', notes)
 
-  return notes.map(toDisplayNote)
+  useCacheEffect('logs', con.logs)
+
+  useEffect(() => {
+    let disposed = false
+    Hook(window.console, newLogs => {
+      if (disposed) return
+      conDispatch({ type: 'con.addLogs', payload: newLogs })
+    })
+    return () => void (disposed = true)
+  }, [])
+
+  return [con, notes.map(toDisplayNote)]
+}
+
+//*** HELPERS ***
+
+function overProp(propName) {
+  validate('S', arguments)
+  return R.over(R.lensProp(propName))
+}
+
+function assert(bool, msg) {
+  validate('BS', arguments)
+  if (!bool) {
+    throw new Error(msg)
+  }
+}
+
+function compose(fns) {
+  validate('A', arguments)
+  fns.forEach((fn, i) => {
+    const argType = typeof fn
+    assert(
+      argType === 'function',
+      `[compose] expected typeof fns[${i}] to be function but found ${argType} , ${fn}`,
+    )
+  })
+  return R.compose(...fns)
 }

@@ -1,12 +1,10 @@
-import React, { Fragment, useEffect, useState } from 'react'
+import React, { Fragment, useEffect } from 'react'
 import { withStyles } from '@material-ui/styles'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import { BottomAppBar } from './BottomAppBar'
 import { NoteList } from './NoteList'
 import { useStore } from './Store'
-import { getCached } from './dom-helpers'
-import { useCacheEffect } from './hooks'
-import { Console, Hook } from 'console-feed'
+import { Console } from 'console-feed'
 import * as R from 'ramda'
 import faker from 'faker'
 import nanoid from 'nanoid'
@@ -24,24 +22,7 @@ function createFakeItemArray() {
 }
 
 const App = function() {
-  const displayNotes = useStore()
-
-  const [logs, setLogs] = useState(() => getCached('logs') || [])
-  useCacheEffect('logs', logs)
-
-  useEffect(() => {
-    let disposed = false
-    Hook(window.console, newLogs => {
-      if (disposed) return
-      setLogs(
-        R.compose(
-          R.takeLast(3),
-          R.concat(R.__, newLogs),
-        ),
-      )
-    })
-    return () => void (disposed = true)
-  }, [])
+  const [con, displayNotes] = useStore()
 
   useEffect(() => {
     setTimeout(() => {
@@ -53,7 +34,7 @@ const App = function() {
     <Fragment>
       <CssBaseline />
       <div id="console-container" style={{ backgroundColor: '#242424' }}>
-        <Console logs={logs} variant="dark" />
+        <Console logs={con.logs} variant="dark" />
       </div>
       <NoteList notes={displayNotes} />
       <BottomAppBar />
