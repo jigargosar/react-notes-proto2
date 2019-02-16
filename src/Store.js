@@ -19,13 +19,17 @@ function newNote() {
   }
 }
 
+function notesListToById(notes) {
+  return notes.reduce((acc, n) => {
+    acc[n._id] = n
+    return acc
+  }, {})
+}
+
 export function getInitialNotes() {
   const notes = R.times(newNote, 10)
   return {
-    byId: notes.reduce((acc, n) => {
-      acc[n._id] = n
-      return acc
-    }, {}),
+    byId: notesListToById(notes),
   }
 }
 
@@ -47,11 +51,16 @@ export function notesReducer(state, action) {
       return addNote(state)
     }
     case 'notes.delete':
-      return pipe([overById(R.omit([payload])), R.dissoc('lastAddedId')])(
+      const omit = R.omit
+      return pipe([overById(omit([payload])), R.dissoc('lastAddedId')])(
         state,
       )
-    case 'notes.replaceAll':
-      return pipe([overById(C(payload)), R.dissoc('lastAddedId')])(state)
+    case 'notes.replaceAll': {
+      // noinspection UnnecessaryLocalVariableJS
+      const notes = payload
+      const newById = notesListToById(notes)
+      return pipe([overById(C(newById)), R.dissoc('lastAddedId')])(state)
+    }
     default:
       console.error('Invalid Action', action)
       throw new Error('Invalid Action')
@@ -65,7 +74,7 @@ async function fetchAllDocs(db) {
 
 function useNotes() {
   const [notes, dispatch] = useReducer(
-    notesReducer,
+    compose([R.tap(console.log), notesReducer]),
     getCached('notes'),
     initNotes,
   )
