@@ -3,18 +3,18 @@ import { Console } from 'console-feed'
 import React from 'react'
 
 function TopConsole({ con: { hidden, logs } }) {
+  const logsEmpty = logs.length === 0
   return (
-    <Slide
-      direction="down"
-      in={!hidden && logs.length > 0}
-      mountOnEnter
-      unmountOnExit
-    >
+    <Slide direction="down" in={!hidden} mountOnEnter unmountOnExit>
       <div
         id="console-container"
-        className="fixed max-vh-100 z-9999 overflow-container"
+        className="fixed max-vh-100 z-9999 overflow-container w-100"
       >
-        {<Console logs={logs} variant="dark" />}
+        {logsEmpty ? (
+          <div className="ph3 white">{`<no logs>`}</div>
+        ) : (
+          <Console logs={logs} variant="dark" />
+        )}
       </div>
     </Slide>
   )
