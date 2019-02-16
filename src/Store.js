@@ -66,12 +66,8 @@ function consoleReducer(state, action) {
   }
 }
 
-function getCachedConsoleView() {
-  return getCached('console-view') || { hidden: false }
-}
-
 function getInitialConsoleState() {
-  return { logs: getCached('logs') || [], ...getCachedConsoleView() }
+  return getCached('console') || { logs: [], hidden: false }
 }
 
 export function useStore() {
@@ -83,8 +79,7 @@ export function useStore() {
   )
 
   useCacheEffect('notes', notes)
-
-  useCacheEffect('logs', con.logs)
+  useCacheEffect('console', con)
 
   useEffect(() => {
     let disposed = false
