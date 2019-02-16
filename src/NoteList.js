@@ -4,7 +4,6 @@ import Typography from '@material-ui/core/Typography'
 import List from '@material-ui/core/List'
 import React, { useEffect } from 'react'
 import ListItem from '@material-ui/core/ListItem'
-import Avatar from '@material-ui/core/Avatar'
 import ListItemText from '@material-ui/core/ListItemText'
 import deepOrange from '@material-ui/core/colors/deepOrange'
 import deepPurple from '@material-ui/core/colors/deepPurple'
@@ -58,29 +57,13 @@ function styles(theme) {
   }
 }
 
-function createAvatarClassNameComputer(classes) {
-  return idx => {
-    const avatarClasses = [
-      classes.avatar1,
-      classes.avatar2,
-      classes.avatar3,
-      classes.avatar4,
-      classes.avatar5,
-    ]
-    return avatarClasses[idx % avatarClasses.length]
-  }
-}
-
 function noteIdToItemDomId(lastAddedId) {
   return `nli--${lastAddedId}`
 }
 
-function NoteItem({ dn, avatarClassName, actions }) {
+function NoteItem({ dn, actions }) {
   return (
     <ListItem id={noteIdToItemDomId(dn.id)} button>
-      <Avatar className={avatarClassName} alt="Profile Picture">
-        {dn.person}
-      </Avatar>
       <ListItemText
         primary={
           <Typography variant="subtitle1" noWrap>
@@ -122,7 +105,6 @@ export const NoteList = withStyles(styles)(function NoteList({
       }
     }
   }, lastAddedId)
-  const avatarClassNameAt = createAvatarClassNameComputer(classes)
 
   return (
     <Paper square className={classes.paper}>
@@ -130,16 +112,8 @@ export const NoteList = withStyles(styles)(function NoteList({
         Notes
       </Typography>
       <List className={classes.list}>
-        {getDisplayNotes(notes).map((dn, idx) => {
-          const avatarClassName = avatarClassNameAt(idx)
-          return (
-            <NoteItem
-              key={dn.id}
-              actions={actions}
-              avatarClassName={avatarClassName}
-              dn={dn}
-            />
-          )
+        {getDisplayNotes(notes).map(dn => {
+          return <NoteItem key={dn.id} actions={actions} dn={dn} />
         })}
       </List>
     </Paper>
