@@ -42,7 +42,6 @@ const App = function() {
       >
         <div
           id="console-container"
-          style={{ maxHeight: '100vh' }}
           className="fixed max-vh-100 z-9999 overflow-container"
         >
           {<Console logs={con.logs} variant="dark" />}
