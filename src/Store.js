@@ -130,8 +130,7 @@ function useNotes() {
 
     return {
       addNew: async () => {
-        const note = newNote()
-        await dbPut(note)
+        await dbPut(newNote())
       },
       delete: async _id => {
         await dbPatch({ _id, _deleted: true })
