@@ -3,25 +3,8 @@ import { withStyles } from '@material-ui/styles'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import { NoteList } from './NoteList'
 import { useStore } from './Store'
-import * as R from 'ramda'
-import faker from 'faker'
-import nanoid from 'nanoid'
 import BottomAppBar from './BottomAppBar'
 import TopConsole from './TopConsole'
-
-function createFakeItem() {
-  return {
-    id: nanoid(),
-    fName: faker.name.firstName(),
-    lName: faker.name.lastName(),
-  }
-}
-
-function createFakeItemArray() {
-  return R.times(createFakeItem, 3)
-}
-
-createFakeItemArray()
 
 function App() {
   const [con, displayNotes, actions] = useStore()
