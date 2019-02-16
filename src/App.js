@@ -1,14 +1,13 @@
 import React, { Fragment, useEffect } from 'react'
 import { withStyles } from '@material-ui/styles'
 import CssBaseline from '@material-ui/core/CssBaseline'
-import { BottomAppBar } from './BottomAppBar'
 import { NoteList } from './NoteList'
 import { useStore } from './Store'
-import { Console } from 'console-feed'
 import * as R from 'ramda'
 import faker from 'faker'
 import nanoid from 'nanoid'
-import Slide from '@material-ui/core/Slide'
+import { TopConsole } from './TopConsole'
+import BottomAppBar from './BottomAppBar'
 
 function createFakeItem() {
   return {
@@ -22,25 +21,7 @@ function createFakeItemArray() {
   return R.times(createFakeItem, 3)
 }
 
-function TopConsole({ con: { hidden, logs } }) {
-  return (
-    <Slide
-      direction="down"
-      in={!hidden && logs.length > 0}
-      mountOnEnter
-      unmountOnExit
-    >
-      <div
-        id="console-container"
-        className="fixed max-vh-100 z-9999 overflow-container"
-      >
-        {<Console logs={logs} variant="dark" />}
-      </div>
-    </Slide>
-  )
-}
-
-const App = function() {
+function App() {
   const [con, displayNotes, actions] = useStore()
 
   useEffect(() => {

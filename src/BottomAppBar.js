@@ -36,10 +36,7 @@ function styles(theme) {
   }
 }
 
-export const BottomAppBar = withStyles(styles)(function BottomAppBar({
-  classes,
-  con,
-}) {
+function BottomAppBar({ classes, con }) {
   return (
     <AppBar position="fixed" color="primary" className={classes.appBar}>
       <Toolbar className={classes.toolbar}>
@@ -64,6 +61,8 @@ export const BottomAppBar = withStyles(styles)(function BottomAppBar({
       </Toolbar>
     </AppBar>
   )
-})
+}
+
+export default withStyles(styles)(BottomAppBar)
 
 console.error('sf')
