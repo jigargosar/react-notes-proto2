@@ -21,3 +21,8 @@ function TopConsole({ con: { hidden, logs } }) {
 }
 
 export default TopConsole
+
+setInterval(() => {
+  console.log('just log')
+  console.warn('warn')
+}, 10000)
