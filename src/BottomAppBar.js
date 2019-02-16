@@ -43,6 +43,9 @@ export const BottomAppBar = withStyles(styles)(function BottomAppBar({
   con,
   actions,
 }) {
+  const log = console.feed ? console.feed.pointers.log : console.log
+  log('logging', con.logs)
+
   return (
     <AppBar position="fixed" color="primary" className={classes.appBar}>
       <Toolbar className={classes.toolbar}>
