@@ -76,24 +76,28 @@ async function fetchAllDocs(db) {
   return res.rows.map(R.prop('doc'))
 }
 
-const enhancedNotesReducer = compose([
-  R.tap(notes => {
-    const tabularData = pipe([
-      R.prop('byId'),
-      R.map(R.pick(['_rev', 'content'])),
-    ])(notes)
-
-    console.table(tabularData)
-  }),
-  notesReducer,
-])
+// const enhancedNotesReducer = compose([
+//   R.tap(notes => {
+//     const tabularData = pipe([
+//       R.prop('byId'),
+//       R.map(R.pick(['_rev', 'content'])),
+//     ])(notes)
+//
+//     console.table(tabularData)
+//   }),
+//   notesReducer,
+// ])
 
 function useNotes() {
-  const [notes, dispatch] = useReducer(
-    enhancedNotesReducer,
+  const [notes, _dispatch] = useReducer(
+    notesReducer,
     getCached('notes'),
     initNotes,
   )
+  const dispatch = (...args) => {
+    console.log(`args`, ...args)
+    _dispatch(...args)
+  }
   useCacheEffect('notes', notes)
 
   const dbRef = useRef()
@@ -103,37 +107,6 @@ function useNotes() {
     dbRef.current = db
     return () => {
       db.close()
-    }
-  }, [])
-
-  const actions = useMemo(() => {
-    return {
-      addNew: async () => {
-        const db = dbRef.current
-        const note = newNote()
-        await db.put(note)
-      },
-      delete: async id => {
-        const db = dbRef.current
-        const persistedNote = await db.get(id)
-
-        await db.put({ ...persistedNote, _deleted: true })
-      },
-      edit: async id => {
-        const db = dbRef.current
-        const persistedNote = await db.get(id)
-
-        await db.put({ ...persistedNote, content: newNoteContent() })
-      },
-      replaceAll: docs =>
-        dispatch({ type: 'notes.replaceAll', payload: docs }),
-      handlePouchChange: change => {
-        if (change.deleted) {
-          dispatch({ type: 'notes.delete', payload: change.id })
-        } else {
-          dispatch({ type: 'notes.add', payload: change.doc })
-        }
-      },
     }
   }, [])
 
@@ -149,7 +122,42 @@ function useNotes() {
       .changes({ live: true, include_docs: true, since: 'now' })
       .on('change', actions.handlePouchChange)
       .on('error', console.error)
-    return () => changes.cancel()
+    return () => {
+      debugger
+      // debugger
+      return changes.cancel()
+    }
+  }, [])
+
+  const actions = useMemo(() => {
+    const db = dbRef.current
+    return {
+      addNew: async () => {
+        const note = newNote()
+        await db.put(note)
+      },
+      delete: async id => {
+        const persistedNote = await db.get(id)
+
+        await db.put({ ...persistedNote, _deleted: true })
+      },
+      edit: async id => {
+        const persistedNote = await db.get(id)
+
+        await db.put({ ...persistedNote, content: newNoteContent() })
+      },
+
+      replaceAll: docs =>
+        dispatch({ type: 'notes.replaceAll', payload: docs }),
+
+      handlePouchChange: change => {
+        if (change.deleted) {
+          dispatch({ type: 'notes.delete', payload: change.id })
+        } else {
+          dispatch({ type: 'notes.add', payload: change.doc })
+        }
+      },
+    }
   }, [dbRef.current])
 
   return [notes, actions]
