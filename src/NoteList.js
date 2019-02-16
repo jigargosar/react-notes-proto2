@@ -137,9 +137,9 @@ export const NoteList = withStyles(styles)(function NoteList({
         Notes
       </Typography>
       <List className={classes.list}>
-        {getVisibleNotesList(notes).map(note => {
-          return <NoteItem key={note._id} actions={actions} note={note} />
-        })}
+        {getVisibleNotesList(notes).map(note => (
+          <NoteItem key={note._id} actions={actions} note={note} />
+        ))}
       </List>
     </Paper>
   )
