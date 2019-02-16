@@ -76,39 +76,8 @@ async function fetchAllDocs(db) {
   return res.rows.map(R.prop('doc'))
 }
 
-function useNotes() {
-  const [notes, _dispatch] = useReducer(
-    notesReducer,
-    getCached('notes'),
-    initNotes,
-  )
-  const dispatch = (...args) => {
-    console.log(`args`, ...args)
-    _dispatch(...args)
-  }
-  useCacheEffect('notes', notes)
-
-  const dbRef = useRef()
-
-  useEffect(() => {
-    const db = new PouchDB('notes')
-    fetchAllDocs(db)
-      .then(actions.initFromAllDocsResult)
-      .catch(console.error)
-
-    const changes = db
-      .changes({ live: true, include_docs: true, since: 'now' })
-      .on('change', actions.handlePouchChange)
-      .on('error', console.error)
-
-    dbRef.current = db
-    return () => {
-      changes.cancel()
-      db.close()
-    }
-  }, [])
-
-  const actions = useMemo(() => {
+function useNotesActions(dbRef, dispatch) {
+  return useMemo(() => {
     const dbPut = doc => dbRef.current.put(doc)
     const dbGet = id => dbRef.current.get(id)
     const dbPatch = async patch => {
@@ -144,6 +113,41 @@ function useNotes() {
       },
     }
   }, [])
+}
+
+function useNotes() {
+  const [notes, _dispatch] = useReducer(
+    notesReducer,
+    getCached('notes'),
+    initNotes,
+  )
+  const dispatch = (...args) => {
+    console.log(`args`, ...args)
+    _dispatch(...args)
+  }
+  useCacheEffect('notes', notes)
+
+  const dbRef = useRef()
+
+  useEffect(() => {
+    const db = new PouchDB('notes')
+    fetchAllDocs(db)
+      .then(actions.initFromAllDocsResult)
+      .catch(console.error)
+
+    const changes = db
+      .changes({ live: true, include_docs: true, since: 'now' })
+      .on('change', actions.handlePouchChange)
+      .on('error', console.error)
+
+    dbRef.current = db
+    return () => {
+      changes.cancel()
+      db.close()
+    }
+  }, [])
+
+  const actions = useNotesActions(dbRef, dispatch)
 
   return [notes, actions]
 }
