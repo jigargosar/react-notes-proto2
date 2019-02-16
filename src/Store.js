@@ -14,6 +14,7 @@ function newNote() {
     _rev: null,
     content: faker.lorem.lines(),
     createdAt: Date.now(),
+    modifiedAt: Date.now(),
   }
 }
 
