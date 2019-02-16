@@ -129,9 +129,6 @@ function useNotes() {
         const db = dbRef.current
         const note = newNote()
         await db.put(note)
-        // const res = await db.put(note)
-        // const persistedNote = assocRevFromRes(res)(note)
-        // dispatch({ type: 'notes.add', payload: persistedNote })
       },
       delete: async id => {
         const db = dbRef.current
