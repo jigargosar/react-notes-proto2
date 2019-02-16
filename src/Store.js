@@ -76,7 +76,12 @@ async function fetchAllDocs(db) {
   return res.rows.map(R.prop('doc'))
 }
 
-const enhancedNotesReducer = compose([R.tap(console.log), notesReducer])
+const enhancedNotesReducer = compose([
+  R.tap(notes => {
+    console.table(notes.byId, ['content', '_rev'])
+  }),
+  notesReducer,
+])
 
 function useNotes() {
   const [notes, dispatch] = useReducer(
