@@ -11,7 +11,7 @@ import PouchDB from 'pouchdb-browser'
 
 function newNote() {
   return {
-    _id: nanoid(),
+    _id: `n_${nanoid()}`,
     _rev: null,
     content: faker.lorem.lines(),
     createdAt: Date.now(),
@@ -47,9 +47,11 @@ export function notesReducer(state, action) {
       return addNote(state)
     }
     case 'notes.delete':
-      return pipe([overById(R.omit([payload]))])(state)
+      return pipe([overById(R.omit([payload])), R.dissoc('lastAddedId')])(
+        state,
+      )
     case 'notes.replaceAll':
-      return overById(C(payload))(state)
+      return pipe([overById(C(payload)), R.dissoc('lastAddedId')])(state)
     default:
       console.error('Invalid Action', action)
       throw new Error('Invalid Action')
@@ -86,6 +88,7 @@ function useNotes() {
       .then(actions.replaceAll)
       .catch(console.error)
   }, [dbRef.current])
+
   const assocRevFromRes = res => R.assoc('_rev')(res.rev)
 
   const actions = useMemo(() => {

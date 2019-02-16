@@ -129,7 +129,7 @@ export const NoteList = withStyles(styles)(function NoteList({
         console.debug('unable to focus last added note')
       }
     }
-  }, lastAddedId)
+  }, [lastAddedId])
 
   return (
     <Paper square className={classes.paper}>
