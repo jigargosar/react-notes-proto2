@@ -23,8 +23,6 @@ export default withStyles({})(App)
 
 if (module.hot) {
   module.hot.dispose(() => {
-    console.log('HMR: enter dispose App')
     console.clear()
-    console.log('HMR: exit dispose App')
   })
 }
