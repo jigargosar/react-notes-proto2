@@ -19,7 +19,7 @@ const App = function() {
 
   const displayNotes = notes.map(toDisplayNote)
 
-  const [logs, setLogs] = useState(window.__logs)
+  const [logs, setLogs] = useState([])
 
   useEffect(() => {
     let disposed = false
@@ -49,7 +49,8 @@ export default withStyles({})(App)
 
 if (module.hot) {
   module.hot.dispose(() => {
-    console.log('HMR: disposing App')
+    console.log('HMR: enter dispose App')
     console.clear()
+    console.log('HMR: exit dispose App')
   })
 }
