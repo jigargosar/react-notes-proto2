@@ -10,10 +10,12 @@ import deepPurple from '@material-ui/core/colors/deepPurple'
 import cyan from '@material-ui/core/colors/cyan'
 import amber from '@material-ui/core/colors/amber'
 import green from '@material-ui/core/colors/green'
-import { getDisplayNotes } from './Store'
 import IconButton from '@material-ui/core/IconButton'
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
 import DeleteIcon from '@material-ui/icons/Delete'
+import validate from 'aproba'
+import * as R from 'ramda'
+import { pipe } from './ramda-helpers'
 
 function styles(theme) {
   const spc2 = theme.spacing.unit * 2
@@ -60,6 +62,29 @@ function styles(theme) {
 function noteIdToItemDomId(lastAddedId) {
   return `nli--${lastAddedId}`
 }
+
+export function toDisplayNote(note) {
+  validate('O', arguments)
+
+  const [primary, ...rest] = note.content.trim().split('\n')
+
+  return {
+    id: note._id,
+    primary,
+    secondary: rest.join('\n'),
+    person: R.compose(
+      R.toUpper,
+      R.take(2),
+    )(primary),
+  }
+}
+
+const getDisplayNotes = pipe([
+  R.prop('byId'),
+  R.values,
+  R.sortWith([R.descend(R.propOr(0, 'modifiedAt'))]),
+  R.map(toDisplayNote),
+])
 
 function NoteItem({ note, actions }) {
   return (

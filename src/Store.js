@@ -5,8 +5,8 @@ import { useEffect, useMemo, useReducer } from 'react'
 import { getCached } from './dom-helpers'
 import { useCacheEffect } from './hooks'
 import { Hook } from 'console-feed'
-import validate from 'aproba'
 import useMousetrap from 'react-hook-mousetrap'
+import { compose, overProp, pipe } from './ramda-helpers'
 
 function newNote() {
   return {
@@ -17,29 +17,6 @@ function newNote() {
     modifiedAt: Date.now(),
   }
 }
-
-export function toDisplayNote(note) {
-  validate('O', arguments)
-
-  const [primary, ...rest] = note.content.trim().split('\n')
-
-  return {
-    id: note._id,
-    primary,
-    secondary: rest.join('\n'),
-    person: R.compose(
-      R.toUpper,
-      R.take(2),
-    )(primary),
-  }
-}
-
-export const getDisplayNotes = pipe([
-  R.prop('byId'),
-  R.values,
-  R.sortWith([R.descend(R.propOr(0, 'modifiedAt'))]),
-  R.map(toDisplayNote),
-])
 
 export function getInitialNotes() {
   const notes = R.times(newNote, 10)
@@ -155,35 +132,4 @@ export function useStore() {
   )
 
   return [con, notes, actions]
-}
-
-//*** HELPERS ***
-
-function overProp(propName) {
-  validate('S', arguments)
-  return R.over(R.lensProp(propName))
-}
-
-function assert(bool, msg) {
-  validate('BS', arguments)
-  if (!bool) {
-    throw new Error(msg)
-  }
-}
-
-function compose(fns) {
-  validate('A', arguments)
-  fns.forEach((fn, i) => {
-    const argType = typeof fn
-    assert(
-      argType === 'function',
-      `[compose] expected typeof fns[${i}] to be function but found ${argType} , ${fn}`,
-    )
-  })
-  return R.compose(...fns)
-}
-
-function pipe(fns) {
-  validate('A', arguments)
-  return compose(R.reverse(fns))
 }
