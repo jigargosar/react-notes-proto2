@@ -125,9 +125,12 @@ function useNotes() {
     console.log(`args`, ...args)
     _dispatch(...args)
   }
+
   useCacheEffect('notes', notes)
 
   const dbRef = useRef()
+
+  const actions = useNotesActions(dbRef, dispatch)
 
   useEffect(() => {
     const db = new PouchDB('notes')
@@ -146,8 +149,6 @@ function useNotes() {
       db.close()
     }
   }, [])
-
-  const actions = useNotesActions(dbRef, dispatch)
 
   return [notes, actions]
 }
