@@ -79,32 +79,32 @@ export function toDisplayNote(note) {
   }
 }
 
-const getDisplayNotes = pipe([
+const getVisibleNotesList = pipe([
   R.prop('byId'),
   R.values,
   R.sortWith([R.descend(R.propOr(0, 'modifiedAt'))]),
-  R.map(toDisplayNote),
 ])
 
 function NoteItem({ note, actions }) {
+  const dn = toDisplayNote(note)
   return (
-    <ListItem id={noteIdToItemDomId(note.id)} button>
+    <ListItem id={noteIdToItemDomId(dn.id)} button>
       <ListItemText
         primary={
           <Typography variant="subtitle1" noWrap>
-            {note.primary}
+            {dn.primary}
           </Typography>
         }
         secondary={
           <Typography variant={'body1'} color="textSecondary" noWrap>
-            {note.secondary}
+            {dn.secondary}
           </Typography>
         }
       />
       <ListItemSecondaryAction>
         <IconButton
           aria-label="Delete"
-          onClick={() => actions.notes.delete(note.id)}
+          onClick={() => actions.notes.delete(dn.id)}
         >
           <DeleteIcon />
         </IconButton>
@@ -137,8 +137,8 @@ export const NoteList = withStyles(styles)(function NoteList({
         Notes
       </Typography>
       <List className={classes.list}>
-        {getDisplayNotes(notes).map(note => {
-          return <NoteItem key={note.id} actions={actions} note={note} />
+        {getVisibleNotesList(notes).map(note => {
+          return <NoteItem key={note._id} actions={actions} note={note} />
         })}
       </List>
     </Paper>
