@@ -37,15 +37,8 @@ export function notesReducer(state, action) {
   const overById = overProp('byId')
   const payload = action.payload
   switch (action.type) {
-    case 'notes.addNew': {
-      const note = newNote()
-      const mergeNewNote = overById(R.mergeLeft(R.objOf(note._id)(note)))
-      return compose([R.assoc('lastAddedId', note._id), mergeNewNote])(
-        state,
-      )
-    }
     case 'notes.add': {
-      const note = newNote()
+      const note = payload
       const mergeNewNote = overById(R.mergeLeft(R.objOf(note._id)(note)))
       const addNote = compose([
         R.assoc('lastAddedId', note._id),
