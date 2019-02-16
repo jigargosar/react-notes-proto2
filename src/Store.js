@@ -93,9 +93,16 @@ function useNotes() {
   useEffect(() => {
     const db = dbRef.current
     if (!db) return
+
     fetchAllDocs(db)
       .then(actions.replaceAll)
       .catch(console.error)
+
+    const changes = db
+      .changes({ live: true, include_docs: true, since: 'now' })
+      .on('change', actions.handlePouchChange)
+      .on('error', console.error)
+    return () => changes.cancel()
   }, [dbRef.current])
 
   const assocRevFromRes = res => R.assoc('_rev')(res.rev)
@@ -115,10 +122,16 @@ function useNotes() {
         const persistedNote = await db.get(id)
 
         await db.put({ ...persistedNote, _deleted: true })
-        dispatch({ type: 'notes.delete', payload: id })
       },
       replaceAll: docs =>
         dispatch({ type: 'notes.replaceAll', payload: docs }),
+      handlePouchChange: change => {
+        if (change.deleted) {
+          dispatch({ type: 'notes.delete', payload: change.id })
+        } else {
+          console.log(change)
+        }
+      },
     }
   }, [])
   return [notes, actions]
