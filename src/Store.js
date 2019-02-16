@@ -141,10 +141,11 @@ export function useStore() {
     [],
   )
 
-  const getDisplayNotes = compose([
-    R.map(toDisplayNote),
-    R.values,
+  const getDisplayNotes = pipe([
     R.prop('byId'),
+    R.values,
+    R.sortWith([R.descend(R.propOr(0, 'modifiedAt'))]),
+    R.map(toDisplayNote),
   ])
 
   return [con, getDisplayNotes(notes), actions]
@@ -174,4 +175,9 @@ function compose(fns) {
     )
   })
   return R.compose(...fns)
+}
+
+function pipe(fns) {
+  validate('A', arguments)
+  return compose(R.reverse(fns))
 }
