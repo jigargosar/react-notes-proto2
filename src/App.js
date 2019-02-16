@@ -49,6 +49,7 @@ export default withStyles({})(App)
 
 if (module.hot) {
   module.hot.dispose(() => {
+    console.log('HMR: disposing App')
     console.clear()
   })
 }
