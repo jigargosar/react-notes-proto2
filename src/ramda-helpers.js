@@ -32,3 +32,10 @@ export function pipe(fns) {
   validate('A', arguments)
   return compose(R.reverse(fns))
 }
+
+export function sleep(timeout) {
+  validate('N', arguments)
+  return new Promise(resolve => {
+    setTimeout(resolve, timeout)
+  })
+}
