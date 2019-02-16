@@ -56,19 +56,19 @@ export function initNotes(maybeNotes) {
 }
 
 export function notesReducer(state, action) {
+  const overById = overProp('byId')
+  const payload = action.payload
   switch (action.type) {
     case 'notes.addNew':
       const note = newNote()
-      const mergeNewNote = overProp('byId')(
-        R.mergeLeft(R.objOf(note._id)(note)),
-      )
+      const mergeNewNote = overById(R.mergeLeft(R.objOf(note._id)(note)))
       return compose([R.assoc('lastAddedId', note._id), mergeNewNote])(
         state,
       )
     case 'notes.delete':
-      return state
+      return pipe(overById(R.omit([payload])))(state)
     case 'notes.reset':
-      return initNotes(action.payload)
+      return initNotes(payload)
     default:
       console.error('Invalid Action', action)
       throw new Error('Invalid Action')
