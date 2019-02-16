@@ -1,9 +1,9 @@
-import React, { Fragment, useEffect, useReducer, useState } from 'react'
+import React, { Fragment, useEffect, useState } from 'react'
 import { withStyles } from '@material-ui/styles'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import { BottomAppBar } from './BottomAppBar'
 import { NoteList } from './NoteList'
-import { initNotes, notesReducer, toDisplayNote } from './Store'
+import { useStore } from './Store'
 import { getCached } from './dom-helpers'
 import { useCacheEffect } from './hooks'
 import { Console, Hook } from 'console-feed'
@@ -24,15 +24,7 @@ function createFakeItemArray() {
 }
 
 const App = function() {
-  const [notes, dispatch] = useReducer(
-    notesReducer,
-    getCached('notes'),
-    initNotes,
-  )
-
-  useCacheEffect('notes', notes)
-
-  const displayNotes = notes.map(toDisplayNote)
+  const displayNotes = useStore()
 
   const [logs, setLogs] = useState(() => getCached('logs') || [])
   useCacheEffect('logs', logs)
@@ -63,7 +55,7 @@ const App = function() {
       <div id="console-container" style={{ backgroundColor: '#242424' }}>
         <Console logs={logs} variant="dark" />
       </div>
-      <NoteList notes={displayNotes} dispatch={dispatch} />
+      <NoteList notes={displayNotes} />
       <BottomAppBar />
     </Fragment>
   )

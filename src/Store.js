@@ -1,6 +1,9 @@
 import * as R from 'ramda'
 import nanoid from 'nanoid'
 import faker from 'faker'
+import { useReducer } from 'react'
+import { getCached } from './dom-helpers'
+import { useCacheEffect } from './hooks'
 
 function newNote() {
   return {
@@ -43,4 +46,12 @@ export function notesReducer(state, action) {
     default:
       throw new Error('Invalid Action')
   }
+}
+
+export function useStore() {
+  const [notes] = useReducer(notesReducer, getCached('notes'), initNotes)
+
+  useCacheEffect('notes', notes)
+
+  return notes.map(toDisplayNote)
 }
