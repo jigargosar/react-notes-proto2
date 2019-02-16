@@ -18,19 +18,20 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
 import DeleteIcon from '@material-ui/icons/Delete'
 
 function styles(theme) {
+  const spc2 = theme.spacing.unit * 2
   return {
     paper: {
-      paddingBottom: 100,
+      paddingBottom: spc2,
       maxWidth: theme.contentMaxWidth,
-      margin: 'auto',
+      margin: '0 auto 50px',
     },
     text: {
-      paddingTop: theme.spacing.unit * 2,
-      paddingLeft: theme.spacing.unit * 2,
-      paddingRight: theme.spacing.unit * 2,
+      paddingTop: spc2,
+      paddingLeft: spc2,
+      paddingRight: spc2,
     },
     list: {
-      marginBottom: theme.spacing.unit * 2,
+      marginBottom: spc2,
     },
     subHeader: {
       backgroundColor: theme.palette.background.paper,
