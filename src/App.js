@@ -7,13 +7,13 @@ import BottomAppBar from './BottomAppBar'
 import TopConsole from './TopConsole'
 
 function App() {
-  const [con, displayNotes, actions] = useStore()
+  const [con, notes, actions] = useStore()
 
   return (
     <Fragment>
       <CssBaseline />
       <TopConsole con={con} />
-      <NoteList notes={displayNotes} />
+      <NoteList notes={notes} />
       <BottomAppBar con={con} actions={actions} />
     </Fragment>
   )

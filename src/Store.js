@@ -34,6 +34,13 @@ export function toDisplayNote(note) {
   }
 }
 
+export const getDisplayNotes = pipe([
+  R.prop('byId'),
+  R.values,
+  R.sortWith([R.descend(R.propOr(0, 'modifiedAt'))]),
+  R.map(toDisplayNote),
+])
+
 export function getInitialNotes() {
   const notes = R.times(newNote, 10)
   return {
@@ -147,14 +154,7 @@ export function useStore() {
     [],
   )
 
-  const getDisplayNotes = pipe([
-    R.prop('byId'),
-    R.values,
-    R.sortWith([R.descend(R.propOr(0, 'modifiedAt'))]),
-    R.map(toDisplayNote),
-  ])
-
-  return [con, getDisplayNotes(notes), actions]
+  return [con, notes, actions]
 }
 
 //*** HELPERS ***

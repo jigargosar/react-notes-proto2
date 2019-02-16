@@ -2,7 +2,7 @@ import { withStyles } from '@material-ui/styles'
 import Paper from '@material-ui/core/Paper'
 import Typography from '@material-ui/core/Typography'
 import List from '@material-ui/core/List'
-import React, { Fragment } from 'react'
+import React, { Fragment, useEffect } from 'react'
 import ListSubheader from '@material-ui/core/ListSubheader'
 import ListItem from '@material-ui/core/ListItem'
 import Avatar from '@material-ui/core/Avatar'
@@ -12,6 +12,7 @@ import deepPurple from '@material-ui/core/colors/deepPurple'
 import cyan from '@material-ui/core/colors/cyan'
 import amber from '@material-ui/core/colors/amber'
 import green from '@material-ui/core/colors/green'
+import { getDisplayNotes } from './Store'
 
 function styles(theme) {
   return {
@@ -67,56 +68,74 @@ function getAvatarClassName(classes) {
   }
 }
 
+function noteIdToItemDomId(lastAddedId) {
+  return `nli--${lastAddedId}`
+}
+
 export const NoteList = withStyles(styles)(function NoteList({
   notes,
   classes,
 }) {
+  const lastAddedId = notes.lastAddedId
+  useEffect(() => {
+    if (lastAddedId) {
+      const el = document.getElementById(noteIdToItemDomId(lastAddedId))
+
+      if (el) {
+        el.focus()
+      } else {
+        throw new Error('unable to focus last added note')
+      }
+    }
+  }, lastAddedId)
   return (
     <Paper square className={classes.paper}>
       <Typography className={classes.text} variant="h5" gutterBottom>
         Notes
       </Typography>
       <List className={classes.list}>
-        {notes.map(({ id, primary, secondary, person }, idx) => {
-          return (
-            <Fragment key={id}>
-              {idx === 0 && (
-                <ListSubheader className={classes.subHeader}>
-                  Today
-                </ListSubheader>
-              )}
-              {idx === 2 && (
-                <ListSubheader className={classes.subHeader}>
-                  Yesterday
-                </ListSubheader>
-              )}
-              <ListItem button>
-                <Avatar
-                  className={getAvatarClassName(classes)(idx)}
-                  alt="Profile Picture"
-                >
-                  {person}
-                </Avatar>
-                <ListItemText
-                  primary={
-                    <Typography variant="subtitle1" noWrap>
-                      {primary}
-                    </Typography>
-                  }
-                  secondary={
-                    <Typography
-                      variant={'body1'}
-                      color="textSecondary"
-                      noWrap
-                    >
-                      {secondary}
-                    </Typography>
-                  }
-                />
-              </ListItem>
-            </Fragment>
-          )
-        })}
+        {getDisplayNotes(notes).map(
+          ({ id, primary, secondary, person }, idx) => {
+            return (
+              <Fragment key={id}>
+                {idx === 0 && (
+                  <ListSubheader className={classes.subHeader}>
+                    Today
+                  </ListSubheader>
+                )}
+                {idx === 2 && (
+                  <ListSubheader className={classes.subHeader}>
+                    Yesterday
+                  </ListSubheader>
+                )}
+                <ListItem button>
+                  <Avatar
+                    className={getAvatarClassName(classes)(idx)}
+                    alt="Profile Picture"
+                  >
+                    {person}
+                  </Avatar>
+                  <ListItemText
+                    primary={
+                      <Typography variant="subtitle1" noWrap>
+                        {primary}
+                      </Typography>
+                    }
+                    secondary={
+                      <Typography
+                        variant={'body1'}
+                        color="textSecondary"
+                        noWrap
+                      >
+                        {secondary}
+                      </Typography>
+                    }
+                  />
+                </ListItem>
+              </Fragment>
+            )
+          },
+        )}
       </List>
     </Paper>
   )
