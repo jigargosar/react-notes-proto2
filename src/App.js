@@ -6,7 +6,8 @@ import { NoteList } from './NoteList'
 import { initNotes, notesReducer, toDisplayNote } from './Store'
 import { getCached } from './dom-helpers'
 import { useCacheEffect } from './hooks'
-import { Console, Decode, Hook } from 'console-feed'
+import { Console, Hook } from 'console-feed'
+import * as R from 'ramda'
 
 const App = function() {
   const [notes, dispatch] = useReducer(
@@ -24,9 +25,9 @@ const App = function() {
 
   useEffect(() => {
     let disposed = false
-    Hook(window.console, log => {
+    Hook(window.console, newLogs => {
       if (disposed) return
-      setLogs(logs => [...logs, Decode(log)])
+      setLogs(R.concat(R.__, newLogs))
     })
     return () => {
       disposed = true
