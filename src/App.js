@@ -29,9 +29,7 @@ const App = function() {
       if (disposed) return
       setLogs(R.concat(R.__, newLogs))
     })
-    return () => {
-      disposed = true
-    }
+    return () => (disposed = true)
   }, [])
 
   useEffect(() => {
