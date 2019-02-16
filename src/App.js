@@ -19,11 +19,8 @@ const App = function() {
 
   const displayNotes = notes.map(toDisplayNote)
 
-  const [logs, setLogs] = useState([])
-
-  setTimeout(() => {
-    throw new Error('foo')
-  }, 1000)
+  const [logs, setLogs] = useState(() => getCached('logs') || [])
+  useCacheEffect('logs', logs)
 
   useEffect(() => {
     let disposed = false
@@ -34,6 +31,12 @@ const App = function() {
     return () => {
       disposed = true
     }
+  }, [])
+
+  useEffect(() => {
+    setTimeout(() => {
+      console.table([{ name: 'Wow tracing' }])
+    }, 1000)
   }, [])
 
   return (
