@@ -16,14 +16,15 @@ import nanoid from 'nanoid'
 import validate from 'aproba'
 import assert from 'assert'
 
-function newEmptyDoc() {
-  return {
+function newDoc(attributes) {
+  validate('O', arguments)
+
+  return R.mergeLeft({
     _id: `m_${nanoid()}`,
     _rev: null,
-    content: faker.lorem.lines(),
     createdAt: Date.now(),
     modifiedAt: Date.now(),
-  }
+  })
 }
 
 function pouchDocsToIdLookup(docs) {
@@ -32,7 +33,7 @@ function pouchDocsToIdLookup(docs) {
 }
 
 function generateDefaultState() {
-  const docs = R.times(newEmptyDoc, 10)
+  const docs = R.times(() => newDoc({}), 10)
   return {
     byId: pouchDocsToIdLookup(docs),
   }
@@ -65,8 +66,9 @@ function createActions(dbRef, _dispatch, ns) {
     }
 
     return {
-      addNew: async () => {
-        await dbPut(newEmptyDoc())
+      async addNew(attributes) {
+        validate('O', arguments)
+        await dbPut(newDoc(attributes))
       },
       delete: async note => {
         await patchNote({ _deleted: true }, note)

@@ -9,6 +9,7 @@ import AddIcon from '@material-ui/icons/Add'
 import SearchIcon from '@material-ui/icons/Search'
 import MoreIcon from '@material-ui/icons/MoreVert'
 import { compose } from './ramda-helpers'
+import faker from 'faker'
 
 function styles(theme) {
   return {
@@ -48,7 +49,9 @@ function BottomAppBar({ classes, actions }) {
           color="secondary"
           aria-label="Add"
           className={classes.fabButton}
-          onClick={actions.notes.addNew}
+          onClick={() =>
+            actions.notes.addNew({ content: faker.lorem.lines() })
+          }
         >
           <AddIcon />
         </Fab>
