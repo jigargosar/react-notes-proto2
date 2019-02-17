@@ -19,12 +19,15 @@ import assert from 'assert'
 function newDoc(attributes) {
   validate('O', arguments)
 
-  return R.mergeLeft({
-    _id: `m_${nanoid()}`,
-    _rev: null,
-    createdAt: Date.now(),
-    modifiedAt: Date.now(),
-  })
+  return R.mergeLeft(
+    {
+      _id: `m_${nanoid()}`,
+      _rev: null,
+      createdAt: Date.now(),
+      modifiedAt: Date.now(),
+    },
+    attributes,
+  )
 }
 
 function pouchDocsToIdLookup(docs) {
