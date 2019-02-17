@@ -1,5 +1,5 @@
 import faker from 'faker'
-import { useEffect, useMemo, useRef } from 'react'
+import { useEffect, useMemo, useReducer, useRef } from 'react'
 import * as R from 'ramda'
 import { C, compose, objFromList, overProp, pipe } from './ramda-helpers'
 import { getCached } from './dom-helpers'
@@ -78,19 +78,18 @@ function useActions(dbRef, dispatch) {
 
 function stripNSPrefix(ns, str) {
   validate('SS', arguments)
-  return R.replace(new RegExp(`^${ns}.`))(str)
+  return R.replace(new RegExp(`^${ns}.`))('')(str)
 }
 
-function useReducer(ns) {
+function createReducer(ns) {
   validate('S', arguments)
   return useMemo(
     () =>
       function reducer(state, action) {
         const overById = overProp('byId')
         const payload = action.payload
-        const actionTypeWithoutNS = stripNSPrefix(ns)(action.type)
-
-        switch (actionTypeWithoutNS) {
+        const atWithoutNS = stripNSPrefix(ns, action.type)
+        switch (atWithoutNS) {
           case 'add': {
             const note = payload
             const mergeNewNote = overById(
@@ -117,7 +116,7 @@ function useReducer(ns) {
           }
           default:
             console.error('Invalid Action', action)
-            throw new Error('Invalid Action')
+            throw new Error(`Invalid Action ${atWithoutNS}`)
         }
       },
     [],
@@ -129,7 +128,7 @@ export function usePouchDBCollection(ns) {
   const localDbName = `collection-ns-${ns}`
 
   const [state, dispatch] = useReducer(
-    useReducer(ns),
+    createReducer(ns),
     getCached(stateCacheKey),
     initState,
   )

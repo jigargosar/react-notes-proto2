@@ -1,10 +1,10 @@
 import { useMemo } from 'react'
 import useMousetrap from 'react-hook-mousetrap'
-import { useNotes } from './useNotes'
 import { useConsole } from './useConsoleCapture'
+import { usePouchDBCollection } from './usePouchDBCollection'
 
 export function useStore() {
-  const [notes, notesA] = useNotes()
+  const [notes, notesA] = usePouchDBCollection('notes')
 
   const [con, conA] = useConsole()
 
