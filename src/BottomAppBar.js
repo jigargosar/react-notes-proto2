@@ -48,7 +48,7 @@ function BottomAppBar({ classes, actions }) {
           color="secondary"
           aria-label="Add"
           className={classes.fabButton}
-          onClick={actions.notes.createAndAddNew}
+          onClick={actions.notes.onAddClicked}
         >
           <AddIcon />
         </Fab>
