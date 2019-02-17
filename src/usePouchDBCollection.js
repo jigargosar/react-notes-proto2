@@ -4,6 +4,7 @@ import * as R from 'ramda'
 import {
   C,
   compose,
+  invariant,
   mapKeys,
   objFromList,
   overProp,
@@ -42,10 +43,13 @@ function initState(maybeState) {
 }
 
 function createActions(dbRef, _dispatch, ns) {
+  validate('OFS', arguments)
+
   return useMemo(() => {
     function dispatch(action) {
       validate('O', arguments)
-      return _dispatch(overProp('type')(R.concat(`${ns}.`)))
+      const prependNS = overProp('type')(R.concat(`${ns}.`))
+      return _dispatch(prependNS(action))
     }
 
     const dbPut = doc => dbRef.current.put(doc)
@@ -73,15 +77,15 @@ function createActions(dbRef, _dispatch, ns) {
 
       initFromAllDocsResult: allDocsRes =>
         dispatch({
-          type: 'notes.initFromAllDocsResult',
+          type: 'initFromAllDocsResult',
           payload: allDocsRes,
         }),
 
       handlePouchChange: change => {
         if (change.deleted) {
-          dispatch({ type: 'notes.delete', payload: change.id })
+          dispatch({ type: 'delete', payload: change.id })
         } else {
-          dispatch({ type: 'notes.add', payload: change.doc })
+          dispatch({ type: 'add', payload: change.doc })
         }
       },
     }
@@ -112,6 +116,9 @@ function createReducer(ns) {
     const removeLastAddedId = R.dissoc('lastAddedId')
     const setLastAddedId = R.assoc('lastAddedId')
     return function reducer(state, action) {
+      validate('OO', arguments)
+      invariant(action.type.startsWith(`${ns}.`))
+
       const payload = action.payload
       const actionMap = {
         add() {
@@ -154,7 +161,7 @@ export function usePouchDBCollection(ns) {
 
   const dbRef = useRef()
 
-  const actions = createActions(ns, dbRef, dispatch)
+  const actions = createActions(dbRef, dispatch, ns)
 
   useEffect(() => {
     const db = new PouchDB(localDbName)
