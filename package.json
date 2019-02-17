@@ -40,6 +40,7 @@
     "not op_mini all"
   ],
   "devDependencies": {
+    "babel-plugin-espower": "^3.0.1",
     "babel-preset-power-assert": "^3.0.0",
     "customize-cra": "^0.2.11",
     "husky": "^1.3.1",
