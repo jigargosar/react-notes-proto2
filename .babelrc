@@ -1,0 +1,4 @@
+{
+  "presets": ["babel-preset-react-app", "babel-preset-power-assert"],
+  "plugins": []
+}

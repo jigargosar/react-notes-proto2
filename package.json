@@ -21,9 +21,13 @@
     "tachyons": "^4.11.1"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start:orig": "react-scripts start",
+    "start:rewire": "react-app-rewired start",
+    "start": "yarn start:rewire",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test:orig": "react-scripts test",
+    "test:rewire": "react-app-rewired test",
+    "test": "yarn test:rewire",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -36,9 +40,12 @@
     "not op_mini all"
   ],
   "devDependencies": {
+    "babel-preset-power-assert": "^3.0.0",
+    "customize-cra": "^0.2.11",
     "husky": "^1.3.1",
     "lint-staged": "^8.1.4",
-    "prettier": "^1.16.4"
+    "prettier": "^1.16.4",
+    "react-app-rewired": "^2.1.0"
   },
   "prettier": {
     "tabWidth": 2,

@@ -9,18 +9,11 @@ export function overProp(propName) {
   return R.over(R.lensProp(propName))
 }
 
-function assert(bool, msg) {
-  validate('BS', arguments)
-  if (!bool) {
-    throw new Error(msg)
-  }
-}
-
 export function compose(fns) {
   validate('A', arguments)
   fns.forEach((fn, i) => {
     const argType = typeof fn
-    assert(
+    invariant(
       argType === 'function',
       `[compose] expected typeof fns[${i}] to be function but found ${argType} , ${fn}`,
     )
