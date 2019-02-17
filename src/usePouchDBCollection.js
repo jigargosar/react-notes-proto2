@@ -18,17 +18,15 @@ function newEmptyDoc() {
   }
 }
 
-function pouchDocsToIdLookup(list) {
-  return list.reduce((acc, doc) => {
-    acc[doc._id] = doc
-    return acc
-  }, {})
+function pouchDocsToIdLookup(docs) {
+  validate('A', arguments)
+  return objFromList(R.prop('_id'))(docs)
 }
 
 function generateDefaultState() {
   const docs = R.times(newEmptyDoc, 10)
   return {
-    byId: objFromList(R.prop('_id'))(docs),
+    byId: pouchDocsToIdLookup(docs),
   }
 }
 
