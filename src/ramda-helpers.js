@@ -61,7 +61,13 @@ export function hexColorFromStr(str) {
   return '#' + Array(6 - color.length + 1).join('0') + color
 }
 
-export const objFromList = R.curry(function(fn, list) {
+export const objFromList = R.curry(function objFromList(fn, list) {
   validate('FA', arguments)
   return R.chain(R.zipObj, R.map(fn))(list)
+})
+
+//    mapKeys :: (String -> String) -> Object -> Object
+export const mapKeys = R.curry(function mapKeys(fn, obj) {
+  validate('FO', arguments)
+  return R.fromPairs(R.map(R.adjust(0, fn), R.toPairs(obj)))
 })

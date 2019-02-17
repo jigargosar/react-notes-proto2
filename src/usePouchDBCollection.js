@@ -83,8 +83,12 @@ function useReducer(ns) {
       function reducer(state, action) {
         const overById = overProp('byId')
         const payload = action.payload
-        switch (action.type) {
-          case 'notes.add': {
+        const actionTypeWithoutNS = R.replace(
+          new RegExp(`^${ns}.`),
+          action.type,
+        )
+        switch (actionTypeWithoutNS) {
+          case 'add': {
             const note = payload
             const mergeNewNote = overById(
               R.mergeLeft(R.objOf(note._id)(note)),
@@ -95,13 +99,13 @@ function useReducer(ns) {
             ])
             return addNote(state)
           }
-          case 'notes.delete':
+          case 'delete':
             const omit = R.omit
             return pipe([
               overById(omit([payload])),
               R.dissoc('lastAddedId'),
             ])(state)
-          case 'notes.initFromAllDocsResult': {
+          case 'initFromAllDocsResult': {
             const notes = payload.rows.map(R.prop('doc'))
             const newById = pouchDocsToIdLookup(notes)
             return pipe([overById(C(newById)), R.dissoc('lastAddedId')])(
