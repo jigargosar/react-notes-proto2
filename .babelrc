@@ -1,4 +1,4 @@
 {
-  "presets": ["babel-preset-react-app"],
-  "plugins": ["babel-plugin-espower"]
+  "presets": ["babel-preset-react-app", "babel-preset-power-assert"],
+  "plugins": []
 }
