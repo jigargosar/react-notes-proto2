@@ -14,7 +14,7 @@ import { useCacheEffect } from './hooks'
 import PouchDB from 'pouchdb-browser'
 import nanoid from 'nanoid'
 import validate from 'aproba'
-import assert from 'assert'
+import assert from 'power-assert'
 
 function newEmptyDoc() {
   return {
