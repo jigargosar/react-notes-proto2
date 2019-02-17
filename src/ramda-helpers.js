@@ -66,8 +66,8 @@ export const mapKeys = R.curry(function mapKeys(fn, obj) {
   return R.fromPairs(R.map(R.adjust(0, fn), R.toPairs(obj)))
 })
 
-export function toggleProp(propName, obj) {
+export const toggleProp = R.curry(function toggleProp(propName, obj) {
   validate('SO', arguments)
 
   return overProp(propName)(R.not)(obj)
-}
+})
