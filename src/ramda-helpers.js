@@ -39,3 +39,24 @@ export function sleep(timeout) {
     setTimeout(resolve, timeout)
   })
 }
+
+export function invariant(cond, message) {
+  if (message === void 0) {
+    message = 'Illegal state'
+  }
+  if (!cond) throw new Error('[invariant] ' + message)
+}
+
+export function hexColorFromStr(str) {
+  validate('S', arguments)
+  const hash = R.reduce((acc, char) => {
+    const unicode = char.charCodeAt(0)
+    return unicode + ((acc << 5) - acc)
+  })(0)(str)
+
+  const color = Math.floor(
+    Math.abs(((Math.sin(hash) * 10000) % 1) * 16777216),
+  ).toString(16)
+
+  return '#' + Array(6 - color.length + 1).join('0') + color
+}

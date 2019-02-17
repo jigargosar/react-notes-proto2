@@ -18,6 +18,11 @@ function newEmptyDoc() {
   }
 }
 
+function objFromList(getKey, list) {
+  validate('FA', arguments)
+  return pipe([R.zipWith(list.map(getKey))])
+}
+
 function pouchDocsToIdLookup(list) {
   return list.reduce((acc, doc) => {
     acc[doc._id] = doc
