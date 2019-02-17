@@ -19,10 +19,10 @@ function App() {
     <Fragment>
       <CssBaseline />
       <ConsoleContext.Provider value={con}>
-        <NotesContext.Provider notes={notes}>
+        <NotesContext.Provider value={notes}>
           <ActionsContext.Provider value={actions}>
             <TopConsole />
-            <NoteList notes={notes} />
+            <NoteList />
             <BottomAppBar />
           </ActionsContext.Provider>
         </NotesContext.Provider>

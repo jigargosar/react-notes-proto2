@@ -17,7 +17,7 @@ import EditIcon from '@material-ui/icons/Edit'
 import validate from 'aproba'
 import * as R from 'ramda'
 import { pipe } from './ramda-helpers'
-import { useNotesActions } from './Store'
+import { useNotesActions, useNotesState } from './Store'
 
 function styles(theme) {
   const spc2 = theme.spacing.unit * 2
@@ -122,10 +122,8 @@ const NoteItem = React.memo(function NoteItem({ note }) {
   )
 })
 
-export const NoteList = withStyles(styles)(function NoteList({
-  notes,
-  classes,
-}) {
+export const NoteList = withStyles(styles)(function NoteList({ classes }) {
+  const notes = useNotesState()
   const lastAddedId = notes.lastAddedId
 
   useEffect(() => {
