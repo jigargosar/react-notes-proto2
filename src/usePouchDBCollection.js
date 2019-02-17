@@ -33,22 +33,6 @@ function generateDefaultState() {
   }
 }
 
-function applyActionMap(actionMap, state, action) {
-  validate('OOO', arguments)
-  const actionType = action.type
-
-  function defaultAction() {
-    console.error('Invalid Action', action)
-    throw new Error(`Invalid Action Type ${actionType}`)
-  }
-
-  return pipe([
-    R.propOr(defaultAction, actionType),
-    R.call,
-    R.when(R.is(Function))(R.applyTo(state)),
-  ])(actionMap)
-}
-
 function createActions(dbRef, setState) {
   validate('OF', arguments)
 
