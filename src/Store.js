@@ -1,6 +1,6 @@
 import { createContext, createRef, useContext, useMemo } from 'react'
 import useMousetrap from 'react-hook-mousetrap'
-import { useConsole } from './useConsoleCapture'
+import { useConsole } from './useConsole'
 import { useNotes } from './useNotes'
 
 export function useStore() {
