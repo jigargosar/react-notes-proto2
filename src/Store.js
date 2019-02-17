@@ -1,4 +1,4 @@
-import { createContext, useContext, useMemo } from 'react'
+import { createContext, createRef, useContext, useMemo } from 'react'
 import useMousetrap from 'react-hook-mousetrap'
 import { useConsole } from './useConsoleCapture'
 import { useNotes } from './useNotes'
@@ -21,7 +21,7 @@ export function useStore() {
   return [con, notes, actions]
 }
 
-export const ActionsContext = createContext(null)
+export const ActionsContext = createContext(createRef())
 export const NotesContext = createContext(null)
 export const ConsoleContext = createContext(null)
 
