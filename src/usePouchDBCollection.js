@@ -76,6 +76,11 @@ function useActions(dbRef, dispatch) {
   }, [])
 }
 
+function stripNSPrefix(ns, str) {
+  validate('SS', arguments)
+  return R.replace(new RegExp(`^${ns}.`))(str)
+}
+
 function useReducer(ns) {
   validate('S', arguments)
   return useMemo(
@@ -83,10 +88,8 @@ function useReducer(ns) {
       function reducer(state, action) {
         const overById = overProp('byId')
         const payload = action.payload
-        const actionTypeWithoutNS = R.replace(
-          new RegExp(`^${ns}.`),
-          action.type,
-        )
+        const actionTypeWithoutNS = stripNSPrefix(ns)(action.type)
+
         switch (actionTypeWithoutNS) {
           case 'add': {
             const note = payload
