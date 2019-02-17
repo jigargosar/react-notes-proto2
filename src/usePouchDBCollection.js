@@ -1,7 +1,14 @@
 import faker from 'faker'
 import { useEffect, useMemo, useReducer, useRef } from 'react'
 import * as R from 'ramda'
-import { C, compose, objFromList, overProp, pipe } from './ramda-helpers'
+import {
+  C,
+  compose,
+  mapKeys,
+  objFromList,
+  overProp,
+  pipe,
+} from './ramda-helpers'
 import { getCached } from './dom-helpers'
 import { useCacheEffect } from './hooks'
 import PouchDB from 'pouchdb-browser'
@@ -81,6 +88,23 @@ function stripNSPrefix(ns, str) {
   return R.replace(new RegExp(`^${ns}.`))('')(str)
 }
 
+function applyActionMap(ns, actionMap, state, action) {
+  validate('SOOO', arguments)
+  const actionType = action.type
+
+  function defaultAction() {
+    console.error('Invalid Action', action)
+    throw new Error(`Invalid Action Type ${actionType}`)
+  }
+
+  return pipe([
+    mapKeys(R.concat(`${ns}.`)),
+    R.propOr(defaultAction, actionType),
+    R.call,
+    R.when(R.is(Function))(R.applyTo(state)),
+  ])(actionMap)
+}
+
 function createReducer(ns) {
   validate('S', arguments)
   return useMemo(
@@ -88,9 +112,8 @@ function createReducer(ns) {
       function reducer(state, action) {
         const overById = overProp('byId')
         const payload = action.payload
-        const atWithoutNS = stripNSPrefix(ns, action.type)
-        switch (atWithoutNS) {
-          case 'add': {
+        const actionMap = {
+          add() {
             const note = payload
             const mergeNewNote = overById(
               R.mergeLeft(R.objOf(note._id)(note)),
@@ -100,24 +123,24 @@ function createReducer(ns) {
               mergeNewNote,
             ])
             return addNote(state)
-          }
-          case 'delete':
+          },
+          delete() {
             const omit = R.omit
             return pipe([
               overById(omit([payload])),
               R.dissoc('lastAddedId'),
             ])(state)
-          case 'initFromAllDocsResult': {
+          },
+          initFromAllDocsResult() {
             const notes = payload.rows.map(R.prop('doc'))
             const newById = pouchDocsToIdLookup(notes)
             return pipe([overById(C(newById)), R.dissoc('lastAddedId')])(
               state,
             )
-          }
-          default:
-            console.error('Invalid Action', action)
-            throw new Error(`Invalid Action Type ${atWithoutNS}`)
+          },
         }
+
+        return applyActionMap(ns, actionMap, state, action)
       },
     [],
   )
