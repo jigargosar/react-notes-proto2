@@ -102,43 +102,37 @@ function applyActionMap(ns, actionMap, state, action) {
 
 function createReducer(ns) {
   validate('S', arguments)
-  return useMemo(
-    () =>
-      function reducer(state, action) {
-        const overById = overProp('byId')
-        const payload = action.payload
-        const actionMap = {
-          add() {
-            const note = payload
-            const mergeNewNote = overById(
-              R.mergeLeft(R.objOf(note._id)(note)),
-            )
-            const addNote = compose([
-              R.assoc('lastAddedId', note._id),
-              mergeNewNote,
-            ])
-            return addNote(state)
-          },
-          delete() {
-            const omit = R.omit
-            return pipe([
-              overById(omit([payload])),
-              R.dissoc('lastAddedId'),
-            ])(state)
-          },
-          initFromAllDocsResult() {
-            const notes = payload.rows.map(R.prop('doc'))
-            const newById = pouchDocsToIdLookup(notes)
-            return pipe([overById(C(newById)), R.dissoc('lastAddedId')])(
-              state,
-            )
-          },
-        }
+  return useMemo(() => {
+    const overById = overProp('byId')
+    const removeLastAddedId = R.dissoc('lastAddedId')
+    const setLastAddedId = R.assoc('lastAddedId')
+    return function reducer(state, action) {
+      const payload = action.payload
+      const actionMap = {
+        add() {
+          const note = payload
+          const mergeNewNote = overById(
+            R.mergeLeft(R.objOf(note._id)(note)),
+          )
+          const addNote = compose([setLastAddedId(note._id), mergeNewNote])
+          return addNote(state)
+        },
+        delete() {
+          const omit = R.omit
+          return pipe([overById(omit([payload])), removeLastAddedId])(
+            state,
+          )
+        },
+        initFromAllDocsResult() {
+          const notes = payload.rows.map(R.prop('doc'))
+          const newById = pouchDocsToIdLookup(notes)
+          return pipe([overById(C(newById)), removeLastAddedId])(state)
+        },
+      }
 
-        return applyActionMap(ns, actionMap, state, action)
-      },
-    [],
-  )
+      return applyActionMap(ns, actionMap, state, action)
+    }
+  }, [])
 }
 
 export function usePouchDBCollection(ns) {
