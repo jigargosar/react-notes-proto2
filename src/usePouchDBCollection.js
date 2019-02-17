@@ -14,7 +14,7 @@ import { useCacheEffect } from './hooks'
 import PouchDB from 'pouchdb-browser'
 import nanoid from 'nanoid'
 import validate from 'aproba'
-import assert from 'power-assert'
+import assert from 'assert'
 
 function newEmptyDoc() {
   return {
@@ -117,7 +117,7 @@ function createReducer(ns) {
     const setLastAddedId = R.assoc('lastAddedId')
     return function reducer(state, action) {
       validate('OO', arguments)
-      assert(action.type.startsWith(`${ns}..`))
+      assert(action.type.startsWith(`${ns}.`))
 
       const payload = action.payload
       const actionMap = {
