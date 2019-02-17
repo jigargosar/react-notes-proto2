@@ -1,4 +1,3 @@
-import faker from 'faker'
 import { useEffect, useMemo, useReducer, useRef } from 'react'
 import * as R from 'ramda'
 import {
@@ -44,57 +43,6 @@ function generateDefaultState() {
 
 function initState(maybeState) {
   return maybeState || generateDefaultState()
-}
-
-function createActions(dbRef, _dispatch, ns) {
-  validate('OFS', arguments)
-
-  return useMemo(() => {
-    function dispatch(action) {
-      validate('O', arguments)
-      const prependNS = overProp('type')(R.concat(`${ns}.`))
-      return _dispatch(prependNS(action))
-    }
-
-    const dbPut = doc => dbRef.current.put(doc)
-    const dbGet = id => dbRef.current.get(id)
-    const dbPatch = async patch => {
-      const doc = await dbGet(patch._id)
-      return dbPut(R.mergeLeft(patch)(doc))
-    }
-
-    async function patchNote(patch, note) {
-      const { _id, _rev } = note
-      await dbPatch({ _id, _rev, ...patch })
-    }
-
-    return {
-      async addNew(attributes) {
-        validate('O', arguments)
-        await dbPut(newDoc(attributes))
-      },
-      delete: async note => {
-        await patchNote({ _deleted: true }, note)
-      },
-      edit: async note => {
-        await patchNote({ content: faker.lorem.lines() }, note)
-      },
-
-      initFromAllDocsResult: allDocsRes =>
-        dispatch({
-          type: 'initFromAllDocsResult',
-          payload: allDocsRes,
-        }),
-
-      handlePouchChange: change => {
-        if (change.deleted) {
-          dispatch({ type: 'delete', payload: change.id })
-        } else {
-          dispatch({ type: 'add', payload: change.doc })
-        }
-      },
-    }
-  }, [])
 }
 
 function applyActionMap(ns, actionMap, state, action) {
@@ -148,6 +96,59 @@ function createReducer(ns) {
       }
 
       return applyActionMap(ns, actionMap, state, action)
+    }
+  }, [])
+}
+
+function createActions(dbRef, _dispatch, ns) {
+  validate('OFS', arguments)
+
+  return useMemo(() => {
+    function dispatch(action) {
+      validate('O', arguments)
+      const prependNS = overProp('type')(R.concat(`${ns}.`))
+      return _dispatch(prependNS(action))
+    }
+
+    const dbPut = doc => dbRef.current.put(doc)
+    const dbGet = id => dbRef.current.get(id)
+    const dbPatch = async patch => {
+      const doc = await dbGet(patch._id)
+      return dbPut(R.mergeLeft(patch)(doc))
+    }
+
+    async function patchDoc(patch, note) {
+      const { _id, _rev } = note
+      await dbPatch({ _id, _rev, ...patch })
+    }
+
+    return {
+      async addNew(attributes) {
+        validate('O', arguments)
+        await dbPut(newDoc(attributes))
+      },
+      delete: async function(doc) {
+        validate('O', arguments)
+        await patchDoc({ _deleted: true }, doc)
+      },
+      patch: async function(patch, doc) {
+        validate('OO', arguments)
+        await patchDoc(patch, doc)
+      },
+
+      initFromAllDocsResult: allDocsRes =>
+        dispatch({
+          type: 'initFromAllDocsResult',
+          payload: allDocsRes,
+        }),
+
+      handlePouchChange: change => {
+        if (change.deleted) {
+          dispatch({ type: 'delete', payload: change.id })
+        } else {
+          dispatch({ type: 'add', payload: change.doc })
+        }
+      },
     }
   }, [])
 }
