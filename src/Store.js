@@ -26,3 +26,4 @@ export const NotesContext = createContext(null)
 export const ConsoleContext = createContext(null)
 
 export const useActions = () => useContext(ActionsContext)
+export const useNotesActions = () => useActions().notes

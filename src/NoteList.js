@@ -17,7 +17,7 @@ import EditIcon from '@material-ui/icons/Edit'
 import validate from 'aproba'
 import * as R from 'ramda'
 import { pipe } from './ramda-helpers'
-import { useActions } from './Store'
+import { useNotesActions } from './Store'
 
 function styles(theme) {
   const spc2 = theme.spacing.unit * 2
@@ -88,7 +88,7 @@ const getVisibleNotesList = pipe([
 ])
 
 const NoteItem = React.memo(function NoteItem({ note }) {
-  const actions = useActions()
+  const actions = useNotesActions()
   const dn = toDisplayNote(note)
   return (
     <ListItem id={noteIdToItemDomId(dn.id)} button>
@@ -107,13 +107,13 @@ const NoteItem = React.memo(function NoteItem({ note }) {
       <ListItemSecondaryAction>
         <IconButton
           aria-label="Delete"
-          onClick={() => actions.notes.onEditClicked(note)}
+          onClick={() => actions.onEditClicked(note)}
         >
           <EditIcon />
         </IconButton>
         <IconButton
           aria-label="Delete"
-          onClick={() => actions.notes.onDeleteClicked(note)}
+          onClick={() => actions.onDeleteClicked(note)}
         >
           <DeleteIcon />
         </IconButton>
