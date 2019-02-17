@@ -1,74 +1,42 @@
 import faker from 'faker'
-import { useEffect, useMemo, useReducer, useRef } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import * as R from 'ramda'
 import { C, compose, overProp, pipe } from './ramda-helpers'
 import { getCached } from './dom-helpers'
 import { useCacheEffect } from './hooks'
 import PouchDB from 'pouchdb-browser'
 import nanoid from 'nanoid'
+import validate from 'aproba'
 
-function newNoteContent() {
-  return faker.lorem.lines()
-}
-
-function newNote() {
+function newEmptyDoc() {
   return {
-    _id: `n_${nanoid()}`,
+    _id: `c_${nanoid()}`,
     _rev: null,
-    content: newNoteContent(),
+    content: faker.lorem.lines(),
     createdAt: Date.now(),
     modifiedAt: Date.now(),
   }
 }
 
-function notesListToById(notes) {
-  return notes.reduce((acc, n) => {
-    acc[n._id] = n
+function pouchDocsToIdLookup(list) {
+  return list.reduce((acc, doc) => {
+    acc[doc._id] = doc
     return acc
   }, {})
 }
 
-function getInitialNotes() {
-  const notes = R.times(newNote, 10)
+function generateDefaultState() {
+  const docs = R.times(newEmptyDoc, 10)
   return {
-    byId: notesListToById(notes),
+    byId: pouchDocsToIdLookup(docs),
   }
 }
 
-function initNotes(maybeNotes) {
-  return maybeNotes || getInitialNotes()
+function initState(maybeState) {
+  return maybeState || generateDefaultState()
 }
 
-export function notesReducer(state, action) {
-  const overById = overProp('byId')
-  const payload = action.payload
-  switch (action.type) {
-    case 'notes.add': {
-      const note = payload
-      const mergeNewNote = overById(R.mergeLeft(R.objOf(note._id)(note)))
-      const addNote = compose([
-        R.assoc('lastAddedId', note._id),
-        mergeNewNote,
-      ])
-      return addNote(state)
-    }
-    case 'notes.delete':
-      const omit = R.omit
-      return pipe([overById(omit([payload])), R.dissoc('lastAddedId')])(
-        state,
-      )
-    case 'notes.initFromAllDocsResult': {
-      const notes = payload.rows.map(R.prop('doc'))
-      const newById = notesListToById(notes)
-      return pipe([overById(C(newById)), R.dissoc('lastAddedId')])(state)
-    }
-    default:
-      console.error('Invalid Action', action)
-      throw new Error('Invalid Action')
-  }
-}
-
-function useNotesActions(dbRef, dispatch) {
+function useActions(dbRef, dispatch) {
   return useMemo(() => {
     const dbPut = doc => dbRef.current.put(doc)
     const dbGet = id => dbRef.current.get(id)
@@ -84,13 +52,13 @@ function useNotesActions(dbRef, dispatch) {
 
     return {
       addNew: async () => {
-        await dbPut(newNote())
+        await dbPut(newEmptyDoc())
       },
       delete: async note => {
         await patchNote({ _deleted: true }, note)
       },
       edit: async note => {
-        await patchNote({ content: newNoteContent() }, note)
+        await patchNote({ content: faker.lorem.lines() }, note)
       },
 
       initFromAllDocsResult: allDocsRes =>
@@ -110,25 +78,65 @@ function useNotesActions(dbRef, dispatch) {
   }, [])
 }
 
-export function usePouchDBCollection() {
-  const [notes, _dispatch] = useReducer(
-    notesReducer,
-    getCached('notes'),
-    initNotes,
+function useReducer(ns) {
+  validate('S', arguments)
+  return useMemo(
+    () =>
+      function reducer(state, action) {
+        const overById = overProp('byId')
+        const payload = action.payload
+        switch (action.type) {
+          case 'notes.add': {
+            const note = payload
+            const mergeNewNote = overById(
+              R.mergeLeft(R.objOf(note._id)(note)),
+            )
+            const addNote = compose([
+              R.assoc('lastAddedId', note._id),
+              mergeNewNote,
+            ])
+            return addNote(state)
+          }
+          case 'notes.delete':
+            const omit = R.omit
+            return pipe([
+              overById(omit([payload])),
+              R.dissoc('lastAddedId'),
+            ])(state)
+          case 'notes.initFromAllDocsResult': {
+            const notes = payload.rows.map(R.prop('doc'))
+            const newById = pouchDocsToIdLookup(notes)
+            return pipe([overById(C(newById)), R.dissoc('lastAddedId')])(
+              state,
+            )
+          }
+          default:
+            console.error('Invalid Action', action)
+            throw new Error('Invalid Action')
+        }
+      },
+    [],
   )
-  const dispatch = (...args) => {
-    console.log(`args`, ...args)
-    _dispatch(...args)
-  }
+}
 
-  useCacheEffect('notes', notes)
+export function usePouchDBCollection(ns) {
+  const stateCacheKey = `pdb-collection-state-${ns}`
+  const localDbName = `collection-ns-${ns}`
+
+  const [state, dispatch] = useReducer(
+    useReducer(ns),
+    getCached(stateCacheKey),
+    initState,
+  )
+
+  useCacheEffect(stateCacheKey, state)
 
   const dbRef = useRef()
 
-  const actions = useNotesActions(dbRef, dispatch)
+  const actions = useActions(dbRef, dispatch)
 
   useEffect(() => {
-    const db = new PouchDB('notes')
+    const db = new PouchDB(localDbName)
     db.allDocs({ include_docs: true })
       .then(actions.initFromAllDocsResult)
       .catch(console.error)
@@ -145,5 +153,5 @@ export function usePouchDBCollection() {
     }
   }, [])
 
-  return [notes, actions]
+  return [state, actions]
 }
