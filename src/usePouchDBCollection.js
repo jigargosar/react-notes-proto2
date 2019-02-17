@@ -1,19 +1,11 @@
 import { useEffect, useMemo, useReducer, useRef } from 'react'
 import * as R from 'ramda'
-import {
-  C,
-  compose,
-  mapKeys,
-  objFromList,
-  overProp,
-  pipe,
-} from './ramda-helpers'
+import { C, compose, objFromList, overProp, pipe } from './ramda-helpers'
 import { getCached } from './dom-helpers'
 import { useCacheEffect } from './hooks'
 import PouchDB from 'pouchdb-browser'
 import nanoid from 'nanoid'
 import validate from 'aproba'
-import assert from 'assert'
 
 function newDoc(attributes) {
   validate('O', arguments)
@@ -45,8 +37,8 @@ function initState(maybeState) {
   return maybeState || generateDefaultState()
 }
 
-function applyActionMap(ns, actionMap, state, action) {
-  validate('SOOO', arguments)
+function applyActionMap(actionMap, state, action) {
+  validate('OOO', arguments)
   const actionType = action.type
 
   function defaultAction() {
@@ -55,61 +47,44 @@ function applyActionMap(ns, actionMap, state, action) {
   }
 
   return pipe([
-    mapKeys(R.concat(`${ns}.`)),
     R.propOr(defaultAction, actionType),
     R.call,
     R.when(R.is(Function))(R.applyTo(state)),
   ])(actionMap)
 }
 
-function createReducer(ns) {
-  validate('S', arguments)
-  return useMemo(() => {
-    const overById = overProp('byId')
-    const removeLastAddedId = R.dissoc('lastAddedId')
-    const setLastAddedId = R.assoc('lastAddedId')
-    return function reducer(state, action) {
-      validate('OO', arguments)
-      assert(action.type.startsWith(`${ns}.`))
+function reducer(state, action) {
+  validate('OO', arguments)
+  const overById = overProp('byId')
+  const removeLastAddedId = R.dissoc('lastAddedId')
+  const setLastAddedId = R.assoc('lastAddedId')
 
-      const payload = action.payload
-      const actionMap = {
-        add() {
-          const note = payload
-          const mergeNewNote = overById(
-            R.mergeLeft(R.objOf(note._id)(note)),
-          )
-          const addNote = compose([setLastAddedId(note._id), mergeNewNote])
-          return addNote(state)
-        },
-        delete() {
-          const omit = R.omit
-          return pipe([overById(omit([payload])), removeLastAddedId])(
-            state,
-          )
-        },
-        initFromAllDocsResult() {
-          const notes = payload.rows.map(R.prop('doc'))
-          const newById = pouchDocsToIdLookup(notes)
-          return pipe([overById(C(newById)), removeLastAddedId])(state)
-        },
-      }
+  const payload = action.payload
+  const actionMap = {
+    add() {
+      const note = payload
+      const mergeNewNote = overById(R.mergeLeft(R.objOf(note._id)(note)))
+      const addNote = compose([setLastAddedId(note._id), mergeNewNote])
+      return addNote(state)
+    },
+    delete() {
+      const omit = R.omit
+      return pipe([overById(omit([payload])), removeLastAddedId])(state)
+    },
+    initFromAllDocsResult() {
+      const notes = payload.rows.map(R.prop('doc'))
+      const newById = pouchDocsToIdLookup(notes)
+      return pipe([overById(C(newById)), removeLastAddedId])(state)
+    },
+  }
 
-      return applyActionMap(ns, actionMap, state, action)
-    }
-  }, [])
+  return applyActionMap(actionMap, state, action)
 }
 
-function createActions(dbRef, _dispatch, ns) {
-  validate('OFS', arguments)
+function createActions(dbRef, dispatch) {
+  validate('OF', arguments)
 
   return useMemo(() => {
-    function dispatch(action) {
-      validate('O', arguments)
-      const prependNS = overProp('type')(R.concat(`${ns}.`))
-      return _dispatch(prependNS(action))
-    }
-
     const dbPut = doc => dbRef.current.put(doc)
     const dbGet = id => dbRef.current.get(id)
     const dbPatch = async patch => {
@@ -153,12 +128,12 @@ function createActions(dbRef, _dispatch, ns) {
   }, [])
 }
 
-export function usePouchDBCollection(ns) {
-  const stateCacheKey = `pdb-collection-state-${ns}`
-  const localDbName = `collection-ns-${ns}`
+export function usePouchDBCollection(name) {
+  const stateCacheKey = `pdb-collection-state-${name}`
+  const localDbName = `collection-ns-${name}`
 
   const [state, dispatch] = useReducer(
-    createReducer(ns),
+    reducer,
     getCached(stateCacheKey),
     initState,
   )
@@ -167,7 +142,7 @@ export function usePouchDBCollection(ns) {
 
   const dbRef = useRef()
 
-  const actions = createActions(dbRef, dispatch, ns)
+  const actions = createActions(dbRef, dispatch)
 
   useEffect(() => {
     const db = new PouchDB(localDbName)
