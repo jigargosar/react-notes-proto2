@@ -17,6 +17,7 @@ import EditIcon from '@material-ui/icons/Edit'
 import validate from 'aproba'
 import * as R from 'ramda'
 import { pipe } from './ramda-helpers'
+import { useActions } from './Store'
 
 function styles(theme) {
   const spc2 = theme.spacing.unit * 2
@@ -86,7 +87,8 @@ const getVisibleNotesList = pipe([
   R.sortWith([R.descend(R.propOr(0, 'modifiedAt'))]),
 ])
 
-const NoteItem = React.memo(function NoteItem({ note, actions }) {
+const NoteItem = React.memo(function NoteItem({ note }) {
+  const actions = useActions()
   const dn = toDisplayNote(note)
   return (
     <ListItem id={noteIdToItemDomId(dn.id)} button>
@@ -122,10 +124,10 @@ const NoteItem = React.memo(function NoteItem({ note, actions }) {
 
 export const NoteList = withStyles(styles)(function NoteList({
   notes,
-  actions,
   classes,
 }) {
   const lastAddedId = notes.lastAddedId
+
   useEffect(() => {
     if (lastAddedId) {
       const el = document.getElementById(noteIdToItemDomId(lastAddedId))
@@ -145,7 +147,7 @@ export const NoteList = withStyles(styles)(function NoteList({
       </Typography>
       <List className={classes.list}>
         {getVisibleNotesList(notes).map(note => (
-          <NoteItem key={note._id} actions={actions} note={note} />
+          <NoteItem key={note._id} note={note} />
         ))}
       </List>
     </Paper>
