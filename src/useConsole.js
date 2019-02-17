@@ -6,12 +6,12 @@ import { useEffect, useMemo, useState } from 'react'
 import { Hook } from 'console-feed'
 
 export function useConsole() {
-  const [con, setState] = useState(() => {
+  const [state, setState] = useState(() => {
     const { hidden } = getCached('console') || {}
     return { logs: [], hidden: hidden || false }
   })
 
-  useCacheEffect('console', con)
+  useCacheEffect('console', state)
 
   const actions = useMemo(() => {
     return {
@@ -35,5 +35,5 @@ export function useConsole() {
     return () => void (disposed = true)
   }, [])
 
-  return [con, actions]
+  return [state, actions]
 }
