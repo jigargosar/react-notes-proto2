@@ -1,5 +1,6 @@
 import validate from 'aproba'
 import * as R from 'ramda'
+import assert from 'assert'
 
 export const C = R.always
 export const I = R.identity
@@ -13,7 +14,7 @@ export function compose(fns) {
   validate('A', arguments)
   fns.forEach((fn, i) => {
     const argType = typeof fn
-    invariant(
+    assert(
       argType === 'function',
       `[compose] expected typeof fns[${i}] to be function but found ${argType} , ${fn}`,
     )

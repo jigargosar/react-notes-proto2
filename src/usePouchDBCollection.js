@@ -4,7 +4,6 @@ import * as R from 'ramda'
 import {
   C,
   compose,
-  invariant,
   mapKeys,
   objFromList,
   overProp,
@@ -15,6 +14,7 @@ import { useCacheEffect } from './hooks'
 import PouchDB from 'pouchdb-browser'
 import nanoid from 'nanoid'
 import validate from 'aproba'
+import assert from 'assert'
 
 function newEmptyDoc() {
   return {
@@ -117,7 +117,7 @@ function createReducer(ns) {
     const setLastAddedId = R.assoc('lastAddedId')
     return function reducer(state, action) {
       validate('OO', arguments)
-      invariant(action.type.startsWith(`${ns}.`))
+      assert(action.type.startsWith(`${ns}..`))
 
       const payload = action.payload
       const actionMap = {
