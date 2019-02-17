@@ -1,7 +1,7 @@
 import faker from 'faker'
 import { useEffect, useMemo, useRef } from 'react'
 import * as R from 'ramda'
-import { C, compose, overProp, pipe } from './ramda-helpers'
+import { C, compose, objFromList, overProp, pipe } from './ramda-helpers'
 import { getCached } from './dom-helpers'
 import { useCacheEffect } from './hooks'
 import PouchDB from 'pouchdb-browser'
@@ -18,11 +18,6 @@ function newEmptyDoc() {
   }
 }
 
-function objFromList(getKey, list) {
-  validate('FA', arguments)
-  return pipe([R.zipWith(list.map(getKey))])
-}
-
 function pouchDocsToIdLookup(list) {
   return list.reduce((acc, doc) => {
     acc[doc._id] = doc
@@ -33,7 +28,7 @@ function pouchDocsToIdLookup(list) {
 function generateDefaultState() {
   const docs = R.times(newEmptyDoc, 10)
   return {
-    byId: pouchDocsToIdLookup(docs),
+    byId: objFromList(R.prop('_id')),
   }
 }
 

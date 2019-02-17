@@ -60,3 +60,8 @@ export function hexColorFromStr(str) {
 
   return '#' + Array(6 - color.length + 1).join('0') + color
 }
+
+export const objFromList = R.curry(function(fn, list) {
+  validate('FA', arguments)
+  return R.chain(R.zipObj, R.map(fn))(list)
+})
