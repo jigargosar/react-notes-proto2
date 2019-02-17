@@ -1,8 +1,10 @@
 import Slide from '@material-ui/core/Slide'
 import { Console } from 'console-feed'
 import React from 'react'
+import { useConsoleState } from './Store'
 
-function TopConsole({ con: { hidden, logs } }) {
+function TopConsole() {
+  const { hidden, logs } = useConsoleState()
   const logsEmpty = logs.length === 0
   return (
     <Slide direction="down" in={!hidden} mountOnEnter unmountOnExit>
