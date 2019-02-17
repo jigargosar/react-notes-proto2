@@ -28,7 +28,7 @@ function pouchDocsToIdLookup(list) {
 function generateDefaultState() {
   const docs = R.times(newEmptyDoc, 10)
   return {
-    byId: objFromList(R.prop('_id')),
+    byId: objFromList(R.prop('_id'))(docs),
   }
 }
 
