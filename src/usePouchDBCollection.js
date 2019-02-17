@@ -41,8 +41,13 @@ function initState(maybeState) {
   return maybeState || generateDefaultState()
 }
 
-function useActions(dbRef, dispatch) {
+function createActions(dbRef, _dispatch, ns) {
   return useMemo(() => {
+    function dispatch(action) {
+      validate('O', arguments)
+      return _dispatch(overProp('type')(R.concat(`${ns}.`)))
+    }
+
     const dbPut = doc => dbRef.current.put(doc)
     const dbGet = id => dbRef.current.get(id)
     const dbPatch = async patch => {
@@ -149,7 +154,7 @@ export function usePouchDBCollection(ns) {
 
   const dbRef = useRef()
 
-  const actions = useActions(dbRef, dispatch)
+  const actions = createActions(ns, dbRef, dispatch)
 
   useEffect(() => {
     const db = new PouchDB(localDbName)
