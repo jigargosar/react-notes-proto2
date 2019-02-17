@@ -83,11 +83,6 @@ function useActions(dbRef, dispatch) {
   }, [])
 }
 
-function stripNSPrefix(ns, str) {
-  validate('SS', arguments)
-  return R.replace(new RegExp(`^${ns}.`))('')(str)
-}
-
 function applyActionMap(ns, actionMap, state, action) {
   validate('SOOO', arguments)
   const actionType = action.type
