@@ -116,7 +116,7 @@ function createReducer(ns) {
           }
           default:
             console.error('Invalid Action', action)
-            throw new Error(`Invalid Action ${atWithoutNS}`)
+            throw new Error(`Invalid Action Type ${atWithoutNS}`)
         }
       },
     [],
