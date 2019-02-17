@@ -14,8 +14,8 @@ function App() {
       <CssBaseline />
       <ActionsContext.Provider value={actions}>
         <TopConsole con={con} />
-        <NoteList notes={notes} actions={actions} />
-        <BottomAppBar con={con} actions={actions} />
+        <NoteList notes={notes} />
+        <BottomAppBar />
       </ActionsContext.Provider>
     </Fragment>
   )

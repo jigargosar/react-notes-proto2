@@ -9,6 +9,7 @@ import AddIcon from '@material-ui/icons/Add'
 import SearchIcon from '@material-ui/icons/Search'
 import MoreIcon from '@material-ui/icons/MoreVert'
 import { compose } from './ramda-helpers'
+import { useNotesActions } from './Store'
 
 function styles(theme) {
   return {
@@ -37,7 +38,8 @@ function styles(theme) {
   }
 }
 
-function BottomAppBar({ classes, actions }) {
+function BottomAppBar({ classes }) {
+  const actions = useNotesActions()
   return (
     <AppBar position="fixed" color="primary" className={classes.appBar}>
       <Toolbar className={classes.toolbar}>
@@ -48,7 +50,7 @@ function BottomAppBar({ classes, actions }) {
           color="secondary"
           aria-label="Add"
           className={classes.fabButton}
-          onClick={actions.notes.onAddClicked}
+          onClick={actions.onAddClicked}
         >
           <AddIcon />
         </Fab>
