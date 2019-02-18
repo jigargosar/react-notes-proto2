@@ -2,7 +2,7 @@ import { withStyles } from '@material-ui/styles'
 import Paper from '@material-ui/core/Paper'
 import Typography from '@material-ui/core/Typography'
 import List from '@material-ui/core/List'
-import React, { useEffect, useMemo } from 'react'
+import React, { useEffect, useRef } from 'react'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
 import deepOrange from '@material-ui/core/colors/deepOrange'
@@ -92,7 +92,7 @@ const getVisibleNoteIds = pipe([
 const NoteItem = React.memo(function NoteItem({ id }) {
   const actions = useNotesActions()
   const notes = useNotesState()
-  const note = useMemo(() => notes.byId[id], [notes.byId[id]])
+  const note = notes.byId[id]
   const dn = toDisplayNote(note)
   const isDeleted = R.isNil(note)
 
@@ -146,9 +146,17 @@ export const NoteList = pipe([React.memo, withStyles(styles)])(
       }
     }, [lastAddedId])
 
-    const visibleNoteIds = useMemo(() => getVisibleNoteIds(notes), [
-      notes.byId,
-    ])
+    const visibleIdsRef = useRef([])
+
+    useEffect(() => {
+      const newVIDs = getVisibleNoteIds(notes)
+      if (R.equals(visibleIdsRef.current, newVIDs)) {
+      } else {
+        visibleIdsRef.current = newVIDs
+      }
+    }, [notes.byId])
+
+    const visibleNoteIds = visibleIdsRef.current
 
     const transitions = useTransition(visibleNoteIds, null, {
       from: { transform: 'translate3d(0,-40px,0)', opacity: 0 },
