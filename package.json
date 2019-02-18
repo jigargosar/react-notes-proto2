@@ -6,6 +6,7 @@
     "@material-ui/core": "^3.9.2",
     "@material-ui/icons": "^3.0.2",
     "@material-ui/styles": "^3.0.0-alpha.10",
+    "@staltz/use-profunctor-state": "^1.1.1",
     "@types/material-ui": "^0.21.6",
     "aproba": "^2.0.0",
     "console-feed": "^2.8.5",
@@ -18,6 +19,7 @@
     "react-hook-mousetrap": "^2.0.2",
     "react-inspector": "^2.3.1",
     "react-scripts": "2.1.5",
+    "react-spring": "^8.0.7",
     "tachyons": "^4.11.1"
   },
   "scripts": {

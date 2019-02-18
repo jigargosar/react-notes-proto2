@@ -76,3 +76,4 @@ export const toggleProp = R.curry(function toggleProp(propName, obj) {
 //   const con = console.feed ? console.feed.pointers : console
 //   con.log(...args)
 // }
+export const _idProp = R.prop('_id')

@@ -16,8 +16,9 @@ import DeleteIcon from '@material-ui/icons/Delete'
 import EditIcon from '@material-ui/icons/Edit'
 import validate from 'aproba'
 import * as R from 'ramda'
-import { pipe } from './ramda-helpers'
+import { _idProp, pipe } from './ramda-helpers'
 import { useNotesActions, useNotesState } from './Store'
+import { animated, useTransition } from 'react-spring'
 
 function styles(theme) {
   const spc2 = theme.spacing.unit * 2
@@ -81,7 +82,7 @@ export function toDisplayNote(note) {
   }
 }
 
-const getVisibleNotesList = pipe([
+const getVisibleNotes = pipe([
   R.prop('byId'),
   R.values,
   R.sortWith([R.descend(R.propOr(0, 'modifiedAt'))]),
@@ -138,14 +139,23 @@ export const NoteList = withStyles(styles)(function NoteList({ classes }) {
     }
   }, [lastAddedId])
 
+  const visibleNotes = getVisibleNotes(notes)
+
+  const transitions = useTransition(visibleNotes, _idProp, {
+    from: { transform: 'translate3d(0,-40px,0)', opacity: 0 },
+    enter: { transform: 'translate3d(0,0px,0)', opacity: 1 },
+    leave: { transform: 'translate3d(0,-40px,0)', opacity: 0 },
+  })
   return (
     <Paper square className={classes.paper}>
       <Typography className={classes.text} variant="h5" gutterBottom>
         Notes
       </Typography>
       <List className={classes.list}>
-        {getVisibleNotesList(notes).map(note => (
-          <NoteItem key={note._id} note={note} />
+        {transitions.map(({ item, props, key }) => (
+          <animated.div key={key} style={props}>
+            <NoteItem note={item} />
+          </animated.div>
         ))}
       </List>
     </Paper>
