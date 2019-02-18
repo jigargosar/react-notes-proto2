@@ -21,6 +21,9 @@
     "tachyons": "^4.11.1"
   },
   "scripts": {
+    "cosmos": "cosmos --config cosmos.config.js",
+    "cosmos:next": "cosmos --config cosmos-next.config.js",
+    "cosmos:export": "cosmos-export",
     "start:orig": "react-scripts start",
     "start:rewire": "react-app-rewired start",
     "start": "yarn start:rewire",
@@ -46,7 +49,8 @@
     "lint-staged": "^8.1.4",
     "power-assert": "^1.6.1",
     "prettier": "^1.16.4",
-    "react-app-rewired": "^2.1.0"
+    "react-app-rewired": "^2.1.0",
+    "react-cosmos": "^4.7.0"
   },
   "prettier": {
     "tabWidth": 2,
