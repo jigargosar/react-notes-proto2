@@ -2,7 +2,7 @@ import { withStyles } from '@material-ui/styles'
 import Paper from '@material-ui/core/Paper'
 import Typography from '@material-ui/core/Typography'
 import List from '@material-ui/core/List'
-import React, { useEffect } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
 import deepOrange from '@material-ui/core/colors/deepOrange'
@@ -82,15 +82,20 @@ export function toDisplayNote(note) {
   }
 }
 
-const getVisibleNotes = pipe([
+const getVisibleNoteIds = pipe([
   R.prop('byId'),
   R.values,
   R.sortWith([R.descend(R.propOr(0, 'modifiedAt'))]),
+  R.map(_idProp),
 ])
 
-const NoteItem = React.memo(function NoteItem({ note }) {
+const NoteItem = React.memo(function NoteItem({ id }) {
   const actions = useNotesActions()
+  const notes = useNotesState()
+  const note = useMemo(() => notes.byId[id], [notes.byId[id]])
   const dn = toDisplayNote(note)
+  const isDeleted = R.isNil(note)
+
   return (
     <ListItem id={noteIdToItemDomId(dn.id)} button>
       <ListItemText
@@ -114,6 +119,7 @@ const NoteItem = React.memo(function NoteItem({ note }) {
         </IconButton>
         <IconButton
           aria-label="Delete"
+          disabled={isDeleted}
           onClick={() => actions.onDeleteClicked(note)}
         >
           <DeleteIcon />
@@ -123,42 +129,46 @@ const NoteItem = React.memo(function NoteItem({ note }) {
   )
 })
 
-export const NoteList = withStyles(styles)(function NoteList({ classes }) {
-  const notes = useNotesState()
-  const lastAddedId = notes.lastAddedId
+export const NoteList = pipe([React.memo, withStyles(styles)])(
+  function NoteList({ classes }) {
+    const notes = useNotesState()
+    const lastAddedId = notes.lastAddedId
 
-  useEffect(() => {
-    if (lastAddedId) {
-      const el = document.getElementById(noteIdToItemDomId(lastAddedId))
+    useEffect(() => {
+      if (lastAddedId) {
+        const el = document.getElementById(noteIdToItemDomId(lastAddedId))
 
-      if (el) {
-        el.focus()
-      } else {
-        console.debug('unable to focus last added note')
+        if (el) {
+          el.focus()
+        } else {
+          console.debug('unable to focus last added note')
+        }
       }
-    }
-  }, [lastAddedId])
+    }, [lastAddedId])
 
-  const visibleNotes = getVisibleNotes(notes)
+    const visibleNoteIds = useMemo(() => getVisibleNoteIds(notes), [
+      notes.byId,
+    ])
 
-  const transitions = useTransition(visibleNotes, _idProp, {
-    from: { transform: 'translate3d(0,-40px,0)', opacity: 0 },
-    enter: { transform: 'translate3d(0,0px,0)', opacity: 1 },
-    leave: { transform: 'translate3d(0,-40px,0)', opacity: 0 },
-    immediate: true,
-  })
-  return (
-    <Paper square className={classes.paper}>
-      <Typography className={classes.text} variant="h5" gutterBottom>
-        Notes
-      </Typography>
-      <List className={classes.list}>
-        {transitions.map(({ item, props, key }) => (
-          <animated.div key={key} style={props}>
-            <NoteItem note={item} />
-          </animated.div>
-        ))}
-      </List>
-    </Paper>
-  )
-})
+    const transitions = useTransition(visibleNoteIds, null, {
+      from: { transform: 'translate3d(0,-40px,0)', opacity: 0 },
+      enter: { transform: 'translate3d(0,0px,0)', opacity: 1 },
+      leave: { transform: 'translate3d(0,-40px,0)', opacity: 0 },
+      immediate: false,
+    })
+    return (
+      <Paper square className={classes.paper}>
+        <Typography className={classes.text} variant="h5" gutterBottom>
+          Notes
+        </Typography>
+        <List className={classes.list}>
+          {transitions.map(({ item, props, key }) => (
+            <animated.div key={key} style={props}>
+              <NoteItem id={item} />
+            </animated.div>
+          ))}
+        </List>
+      </Paper>
+    )
+  },
+)
