@@ -72,7 +72,7 @@ export const toggleProp = R.curry(function toggleProp(propName, obj) {
   return overProp(propName)(R.not)(obj)
 })
 
-export function log(...args) {
-  const con = console.feed ? console.feed.pointers : console
-  con.log(...args)
-}
+// export function log(...args) {
+//   const con = console.feed ? console.feed.pointers : console
+//   con.log(...args)
+// }
