@@ -23,6 +23,7 @@ function getTheme() {
 }
 
 function render() {
+  console.clear()
   ReactDOM.render(
     <ThemeProvider theme={getTheme()}>
       <App />

@@ -2,7 +2,7 @@ import { withStyles } from '@material-ui/styles'
 import Paper from '@material-ui/core/Paper'
 import Typography from '@material-ui/core/Typography'
 import List from '@material-ui/core/List'
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect } from 'react'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
 import deepOrange from '@material-ui/core/colors/deepOrange'
@@ -82,19 +82,15 @@ export function toDisplayNote(note) {
   }
 }
 
-const getVisibleNoteIds = pipe([
+const getVisibleNotes = pipe([
   R.prop('byId'),
   R.values,
   R.sortWith([R.descend(R.propOr(0, 'modifiedAt'))]),
-  R.map(_idProp),
 ])
 
-const NoteItem = React.memo(function NoteItem({ id }) {
+const NoteItem = React.memo(function NoteItem({ note }) {
   const actions = useNotesActions()
-  const notes = useNotesState()
-  const note = notes.byId[id]
   const dn = toDisplayNote(note)
-  const isDeleted = R.isNil(note)
 
   return (
     <ListItem id={noteIdToItemDomId(dn.id)} button>
@@ -119,7 +115,6 @@ const NoteItem = React.memo(function NoteItem({ id }) {
         </IconButton>
         <IconButton
           aria-label="Delete"
-          disabled={isDeleted}
           onClick={() => actions.onDeleteClicked(note)}
         >
           <DeleteIcon />
@@ -146,19 +141,9 @@ export const NoteList = pipe([React.memo, withStyles(styles)])(
       }
     }, [lastAddedId])
 
-    const visibleIdsRef = useRef([])
+    const visibleNotes = getVisibleNotes(notes)
 
-    useEffect(() => {
-      const newVIDs = getVisibleNoteIds(notes)
-      if (R.equals(visibleIdsRef.current, newVIDs)) {
-      } else {
-        visibleIdsRef.current = newVIDs
-      }
-    }, [notes.byId])
-
-    const visibleNoteIds = visibleIdsRef.current
-
-    const transitions = useTransition(visibleNoteIds, null, {
+    const transitions = useTransition(visibleNotes, _idProp, {
       from: { transform: 'translate3d(0,-40px,0)', opacity: 0 },
       enter: { transform: 'translate3d(0,0px,0)', opacity: 1 },
       leave: { transform: 'translate3d(0,-40px,0)', opacity: 0 },
@@ -172,7 +157,7 @@ export const NoteList = pipe([React.memo, withStyles(styles)])(
         <List className={classes.list}>
           {transitions.map(({ item, props, key }) => (
             <animated.div key={key} style={props}>
-              <NoteItem id={item} />
+              <NoteItem note={item} />
             </animated.div>
           ))}
         </List>
